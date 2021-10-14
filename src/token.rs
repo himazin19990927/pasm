@@ -6,11 +6,17 @@ pub enum Token {
     /// The `LD` token.
     LD,
 
+    /// The `LDI` token.
+    LDI,
+
     /// The `ST` token.
     ST,
 
     /// The `ADD` token.
     ADD,
+
+    /// The `ADDI` token.
+    ADDI,
 
     /// The `R0` token.
     R0,

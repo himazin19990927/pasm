@@ -101,8 +101,10 @@ impl<'input> Lexer<'input> {
                 _ => {
                     let token = match self.read_str().as_str() {
                         "LD" => Token::LD,
+                        "LDI" => Token::LDI,
                         "ST" => Token::ST,
                         "ADD" => Token::ADD,
+                        "ADDI" => Token::ADDI,
 
                         "r0" => Token::R0,
                         "r1" => Token::R1,
@@ -186,8 +188,10 @@ mod tests {
     #[test]
     fn keyword_instruction() {
         test_lexer!("LD", vec![Token::LD]);
+        test_lexer!("LDI", vec![Token::LDI]);
         test_lexer!("ST", vec![Token::ST]);
         test_lexer!("ADD", vec![Token::ADD]);
+        test_lexer!("ADDI", vec![Token::ADDI]);
     }
 
     #[test]
@@ -217,6 +221,17 @@ mod tests {
         );
 
         test_lexer!(
+            "LDI r0, #1",
+            vec![
+                Token::LDI,
+                Token::R0,
+                Token::Comma,
+                Token::Sharp,
+                token_int!(1),
+            ]
+        );
+
+        test_lexer!(
             "ST r1, (r0)",
             vec![
                 Token::ST,
@@ -230,11 +245,17 @@ mod tests {
 
         test_lexer!(
             "ADD r1, r2",
+            vec![Token::ADD, Token::R1, Token::Comma, Token::R2,]
+        );
+
+        test_lexer!(
+            "ADDI r0, #1",
             vec![
-                Token::ADD,
-                Token::R1,
+                Token::ADDI,
+                Token::R0,
                 Token::Comma,
-                Token::R2,
+                Token::Sharp,
+                token_int!(1),
             ]
         );
     }
