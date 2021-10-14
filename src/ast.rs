@@ -1,3 +1,12 @@
+#[derive(Debug, PartialEq, Clone)]
+pub enum Instruction {
+    LD { dst: Register, src: Parenthesized },
+    LDI { dst: Register, src: i8 },
+    ST { dst: Parenthesized, src: Register },
+    ADD { dst: Register, src: Register },
+    ADDI { dst: Register, src: i8 },
+}
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Register {
     R0,
@@ -9,3 +18,6 @@ pub enum Register {
     R6,
     R7,
 }
+
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub struct Parenthesized(Register);
