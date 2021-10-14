@@ -1,0 +1,31 @@
+use crate::ast::*;
+use crate::token::*;
+
+grammar;
+
+pub Register: Register = {
+    "R0" => Register::R0,
+    "R1" => Register::R1,
+    "R2" => Register::R2,
+    "R3" => Register::R3,
+    "R4" => Register::R4,
+    "R5" => Register::R5,
+    "R6" => Register::R6,
+    "R7" => Register::R7,
+};
+
+extern {
+    type Location = ();
+    type Error = ();
+
+    enum Token{
+        "R0" => Token::R0,
+        "R1" => Token::R1,
+        "R2" => Token::R2,
+        "R3" => Token::R3,
+        "R4" => Token::R4,
+        "R5" => Token::R5,
+        "R6" => Token::R6,
+        "R7" => Token::R7,
+    }
+}
