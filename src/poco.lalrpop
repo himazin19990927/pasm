@@ -1,28 +1,43 @@
-use crate::{ast::*, token::*, lit::*, register::*};
+use crate::{token::*, lit::*, register::*, mnemonic::*};
 
 grammar;
 
 pub Instruction: Instruction = {
-    "LD" <dst: Register> ","  <src: Parenthesized> => Instruction::LD {
-        dst: dst,
-        src: src,
-    },
-    "LDI" <dst: Register> "," "#" <src: "Lit">  => Instruction::LDI {
-        dst: dst,
-        src: src,
-    },
-    "ST" <src: Register> "," <dst: Parenthesized> => Instruction::ST {
-        dst: dst,
-        src: src,
-    },
-    "ADD" <dst: Register> "," <src: Register> => Instruction::ADD {
-        dst: dst,
-        src: src,
-    },
-    "ADDI" <dst: Register> "," "#" <src: "Lit"> => Instruction::ADDI {
-        dst: dst,
-        src: src,
-    },
+    "LD" <dst: Register> ","  <src: Parenthesized> => Instruction::R(
+        InstructionR {
+            funct: Funct::LD,
+            dst: dst,
+            src: src,
+        }
+    ),
+    "LDI" <dst: Register> "," "#" <imm: "Lit">  => Instruction::from(
+        InstructionI {
+            opcode: Opcode::LDI,
+            dst: dst,
+            immediate: imm,
+        }
+    ),
+    "ST" <src: Register> "," <dst: Parenthesized> => Instruction::from(
+        InstructionR {
+            funct: Funct::ST,
+            dst: dst,
+            src: src,
+        }
+    ),
+    "ADD" <dst: Register> "," <src: Register> => Instruction::from(
+        InstructionR {
+            funct: Funct::ADD,
+            dst: dst,
+            src: src,
+        }
+    ),
+    "ADDI" <dst: Register> "," "#" <imm: "Lit"> => Instruction::from(
+        InstructionI {
+            opcode: Opcode::ADDI,
+            dst: dst,
+            immediate: imm,
+        }
+    ),
 };
 
 pub Register: Register = {
@@ -36,8 +51,8 @@ pub Register: Register = {
     "R7" => Register::R7,
 };
 
-Parenthesized: Parenthesized = {
-    "(" <reg: Register> ")" => Parenthesized(reg),
+Parenthesized: Register = {
+    "(" <Register> ")",
 };
 
 extern {

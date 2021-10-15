@@ -1,10 +1,16 @@
 use std::num::ParseIntError;
 
-
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum Lit {
     Int(LitInt),
+}
+
+impl From<i8> for Lit {
+    fn from(n: i8) -> Self {
+        Lit::Int(LitInt {
+            digits: n.to_string(),
+        })
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]

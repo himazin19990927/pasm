@@ -9,6 +9,3 @@ pub enum Register {
     R6,
     R7,
 }
-
-#[derive(Debug, PartialEq, Clone, Copy)]
-pub struct Parenthesized(pub Register);

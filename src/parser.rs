@@ -5,7 +5,7 @@ lalrpop_mod!(pub poco);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ast::*, lexer::*, lit::*, register::*};
+    use crate::{lexer::*, mnemonic::*, register::*};
 
     macro_rules! test_register {
         ($input: expr, $expected: expr) => {
@@ -25,14 +25,6 @@ mod tests {
         };
     }
 
-    macro_rules! lit_int {
-        ($value: expr) => {
-            Lit::Int(LitInt {
-                digits: $value.to_string(),
-            })
-        };
-    }
-
     #[test]
     fn register() {
         test_register!("r0", Register::R0);
@@ -49,42 +41,47 @@ mod tests {
     fn instruction() {
         test_instruction!(
             "LD r1, (r0)",
-            Instruction::LD {
+            Instruction::from(InstructionR {
+                funct: Funct::LD,
                 dst: Register::R1,
-                src: Parenthesized(Register::R0)
-            }
+                src: Register::R0,
+            })
         );
 
         test_instruction!(
             "LDI r1, #1",
-            Instruction::LDI {
+            Instruction::from(InstructionI {
+                opcode: Opcode::LDI,
                 dst: Register::R1,
-                src: lit_int!(1),
-            }
+                immediate: 1.into(),
+            })
         );
 
         test_instruction!(
             "ST r1, (r0)",
-            Instruction::ST {
-                dst: Parenthesized(Register::R0),
+            Instruction::from(InstructionR {
+                funct: Funct::ST,
+                dst: Register::R0,
                 src: Register::R1,
-            }
+            })
         );
 
         test_instruction!(
             "ADD r0, r1",
-            Instruction::ADD {
+            Instruction::from(InstructionR {
+                funct: Funct::ADD,
                 dst: Register::R0,
-                src: Register::R1
-            }
+                src: Register::R1,
+            })
         );
 
         test_instruction!(
             "ADDI r0, #1",
-            Instruction::ADDI {
+            Instruction::from(InstructionI {
+                opcode: Opcode::ADDI,
                 dst: Register::R0,
-                src: lit_int!(1),
-            }
+                immediate: 1.into(),
+            })
         );
     }
 }

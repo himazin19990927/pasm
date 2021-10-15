@@ -1,4 +1,4 @@
-use pasm::{ast::*, lexer::*, parser::*, token::*};
+use pasm::{mnemonic::*, lexer::*, parser::*, token::*};
 use std::io::{stdout, Write};
 
 use lalrpop_util::ParseError;

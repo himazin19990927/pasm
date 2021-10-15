@@ -1,4 +1,4 @@
-use crate::register::Register;
+use crate::{lit::*, register::Register};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Instruction {
@@ -6,11 +6,23 @@ pub enum Instruction {
     R(InstructionR),
 }
 
+impl From<InstructionI> for Instruction {
+    fn from(i: InstructionI) -> Self {
+        Instruction::I(i)
+    }
+}
+
+impl From<InstructionR> for Instruction {
+    fn from(i: InstructionR) -> Self {
+        Instruction::R(i)
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct InstructionI {
     pub opcode: Opcode,
     pub dst: Register,
-    pub immediate: i8,
+    pub immediate: Lit,
 }
 
 #[derive(Debug, PartialEq, Clone)]
