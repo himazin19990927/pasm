@@ -5,7 +5,7 @@ lalrpop_mod!(pub poco);
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ast::*, lexer::*, lit::*};
+    use crate::{ast::*, lexer::*, lit::*, register::*};
 
     macro_rules! test_register {
         ($input: expr, $expected: expr) => {
