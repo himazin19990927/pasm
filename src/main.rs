@@ -44,7 +44,7 @@ fn main() -> std::io::Result<()> {
     let mut output_writer = BufWriter::new(output_file);
 
     for line in codes {
-        let line_str = line.get_line(true);
+        let line_str = line.get_line(true, true);
         output_writer.write_fmt(format_args!("{}\n", line_str))?;
     }
 

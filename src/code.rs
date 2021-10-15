@@ -18,8 +18,8 @@ impl Code {
         self.code
     }
 
-    pub fn get_line(&self, underscore: bool) -> String {
-        if underscore {
+    pub fn get_line(&self, underscore: bool, mnemonic: bool) -> String {
+        let code = if underscore {
             match self.instruction {
                 Instruction::I(_) => {
                     let (c, d, x) = self.as_i_instr();
@@ -32,6 +32,18 @@ impl Code {
             }
         } else {
             format!("{:016b}", self.code)
+        };
+
+        let comment = if mnemonic {
+            format!("// {}", self.instruction)
+        } else {
+            "".to_string()
+        };
+
+        if underscore {
+            format!("{:<20} {}", code, comment)
+        } else {
+            format!("{:<16} {}", code, comment)
         }
     }
 
