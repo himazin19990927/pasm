@@ -1,3 +1,5 @@
+use crate::lit::*;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     /// A literal token: `1`
@@ -53,14 +55,4 @@ pub enum Token {
 
     /// The `)` token
     CloseParen,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Lit {
-    Int(LitInt),
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct LitInt {
-    pub digits: String,
 }

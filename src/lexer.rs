@@ -1,4 +1,4 @@
-use crate::token::*;
+use crate::{lit::*, token::*};
 use core::panic;
 use std::str::Chars;
 

@@ -1,7 +1,29 @@
-use crate::ast::*;
-use crate::token::*;
+use crate::{ast::*, token::*, lit::*};
 
 grammar;
+
+pub Instruction: Instruction = {
+    "LD" <dst: Register> ","  <src: Parenthesized> => Instruction::LD {
+        dst: dst,
+        src: src,
+    },
+    "LDI" <dst: Register> "," "#" <src: "Lit">  => Instruction::LDI {
+        dst: dst,
+        src: src,
+    },
+    "ST" <src: Register> "," <dst: Parenthesized> => Instruction::ST {
+        dst: dst,
+        src: src,
+    },
+    "ADD" <dst: Register> "," <src: Register> => Instruction::ADD {
+        dst: dst,
+        src: src,
+    },
+    "ADDI" <dst: Register> "," "#" <src: "Lit"> => Instruction::ADDI {
+        dst: dst,
+        src: src,
+    },
+};
 
 pub Register: Register = {
     "R0" => Register::R0,
@@ -14,11 +36,22 @@ pub Register: Register = {
     "R7" => Register::R7,
 };
 
+Parenthesized: Parenthesized = {
+    "(" <reg: Register> ")" => Parenthesized(reg),
+};
+
 extern {
     type Location = ();
     type Error = ();
 
     enum Token{
+        "Lit" => Token::Lit(<Lit>),
+        "LD" => Token::LD,
+        "LDI" => Token::LDI,
+        "ST" => Token::ST,
+        "ADD" => Token::ADD,
+        "ADDI" => Token::ADDI,
+
         "R0" => Token::R0,
         "R1" => Token::R1,
         "R2" => Token::R2,
@@ -27,5 +60,10 @@ extern {
         "R5" => Token::R5,
         "R6" => Token::R6,
         "R7" => Token::R7,
+
+        "," => Token::Comma,
+        "#" => Token::Sharp,
+        "(" => Token::OpenParen,
+        ")" => Token::CloseParen,
     }
 }

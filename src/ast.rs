@@ -1,10 +1,12 @@
+use crate::lit::*;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Instruction {
     LD { dst: Register, src: Parenthesized },
-    LDI { dst: Register, src: i8 },
+    LDI { dst: Register, src: Lit },
     ST { dst: Parenthesized, src: Register },
     ADD { dst: Register, src: Register },
-    ADDI { dst: Register, src: i8 },
+    ADDI { dst: Register, src: Lit },
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -20,4 +22,4 @@ pub enum Register {
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
-pub struct Parenthesized(Register);
+pub struct Parenthesized(pub Register);
