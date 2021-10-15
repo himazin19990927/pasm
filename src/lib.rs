@@ -1,4 +1,5 @@
 pub mod ast;
+pub mod encode;
 pub mod lexer;
 pub mod lit;
 pub mod mnemonic;
