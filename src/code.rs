@@ -21,6 +21,7 @@ impl Code {
     pub fn get_line(&self, underscore: bool, mnemonic: bool) -> String {
         let code = if underscore {
             match self.instruction {
+                Mnemonic::Label(_) => todo!(),
                 Mnemonic::I(_) => {
                     let (c, d, x) = self.as_i_instr();
                     format!("{:05b}_{:03b}_{:08b}", c, d, x)

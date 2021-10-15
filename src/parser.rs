@@ -113,25 +113,38 @@ mod tests {
     }
 
     #[test]
+    fn label() {
+        test_mnemonic!(":label", Mnemonic::Label("label".to_string()));
+        test_mnemonic!(":label0", Mnemonic::Label("label0".to_string()));
+        test_mnemonic!(":end", Mnemonic::Label("end".to_string()));
+    }
+
+    #[test]
     fn file() {
         let input1 = r"
+:start
 LD r1, (r0)
+:jump1
 LDI r1, #1
-ST r1, (r0)
+:jump2 ST r1, (r0)
 ADD r0, r1
 ADDI r0, #1
+:end
 ";
         let expected1 = vec![
+            Mnemonic::Label("start".to_string()),
             Mnemonic::from(InstructionR {
                 funct: Funct::LD,
                 dst: Register::R1,
                 src: Register::R0,
             }),
+            Mnemonic::Label("jump1".to_string()),
             Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: 1.into(),
             }),
+            Mnemonic::Label("jump2".to_string()),
             Mnemonic::from(InstructionR {
                 funct: Funct::ST,
                 dst: Register::R0,
@@ -147,6 +160,7 @@ ADDI r0, #1
                 dst: Register::R0,
                 immediate: 1.into(),
             }),
+            Mnemonic::Label("end".to_string()),
         ];
         test_file!(input1, expected1);
     }

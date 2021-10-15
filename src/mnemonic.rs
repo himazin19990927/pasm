@@ -3,6 +3,7 @@ use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Mnemonic {
+    Label(String),
     I(InstructionI),
     R(InstructionR),
 }
@@ -10,6 +11,7 @@ pub enum Mnemonic {
 impl Display for Mnemonic {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self {
+            Mnemonic::Label(_) => todo!(),
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
         }

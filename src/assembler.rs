@@ -15,6 +15,7 @@ where
 
 pub fn encode(line: Mnemonic) -> Code {
     let code = match &line {
+        Mnemonic::Label(_) => todo!(),
         Mnemonic::I(instr) => {
             let c = instr.opcode.id();
             let d = instr.dst.id();

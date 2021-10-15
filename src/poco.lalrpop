@@ -8,6 +8,8 @@ pub File: Vec<Mnemonic> = {
 }
 
 pub Mnemonic: Mnemonic = {
+    ":" <label: "Ident"> => Mnemonic::Label(label),
+
     "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::from(
         InstructionR {
             funct: Funct::LD,
@@ -71,6 +73,7 @@ extern {
 
     enum Token{
         "Num" => Token::Num(<String>),
+        "Ident" => Token::Ident(<String>),
         "LD" => Token::LD,
         "LDI" => Token::LDI,
         "ST" => Token::ST,
@@ -89,6 +92,7 @@ extern {
         "," => Token::Comma,
         "#" => Token::Sharp,
         "-" => Token::Minus,
+        ":" => Token::Colon,
         "(" => Token::OpenParen,
         ")" => Token::CloseParen,
     }
