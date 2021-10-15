@@ -2,29 +2,29 @@ use crate::register::Register;
 use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum Instruction {
+pub enum Mnemonic {
     I(InstructionI),
     R(InstructionR),
 }
 
-impl Display for Instruction {
+impl Display for Mnemonic {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self {
-            Instruction::I(i) => write!(f, "{}", i),
-            Instruction::R(i) => write!(f, "{}", i),
+            Mnemonic::I(i) => write!(f, "{}", i),
+            Mnemonic::R(i) => write!(f, "{}", i),
         }
     }
 }
 
-impl From<InstructionI> for Instruction {
+impl From<InstructionI> for Mnemonic {
     fn from(i: InstructionI) -> Self {
-        Instruction::I(i)
+        Mnemonic::I(i)
     }
 }
 
-impl From<InstructionR> for Instruction {
+impl From<InstructionR> for Mnemonic {
     fn from(i: InstructionR) -> Self {
-        Instruction::R(i)
+        Mnemonic::R(i)
     }
 }
 

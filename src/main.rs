@@ -53,7 +53,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn parse_file(input: &str) -> Result<Vec<Instruction>, ParseError<(), Token, ()>> {
+fn parse_file(input: &str) -> Result<Vec<Mnemonic>, ParseError<(), Token, ()>> {
     let lexer = Lexer::new(input);
     FileParser::new().parse(lexer)
 }

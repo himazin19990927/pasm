@@ -26,7 +26,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn parse(input: &str) -> Result<Instruction, ParseError<(), Token, ()>> {
+fn parse(input: &str) -> Result<Mnemonic, ParseError<(), Token, ()>> {
     let lexer = Lexer::new(input);
-    poco::InstructionParser::new().parse(lexer)
+    poco::MnemonicParser::new().parse(lexer)
 }

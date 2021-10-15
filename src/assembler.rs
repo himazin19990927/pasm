@@ -2,7 +2,7 @@ use crate::{code::*, mnemonic::*};
 
 pub fn assemble<I>(input: I) -> Vec<Code>
 where
-    I: IntoIterator<Item = Instruction>,
+    I: IntoIterator<Item = Mnemonic>,
 {
     let mut result = Vec::new();
     for line in input {
@@ -13,16 +13,16 @@ where
     return result;
 }
 
-pub fn encode(line: Instruction) -> Code {
+pub fn encode(line: Mnemonic) -> Code {
     let code = match &line {
-        Instruction::I(instr) => {
+        Mnemonic::I(instr) => {
             let c = instr.opcode.id();
             let d = instr.dst.id();
             let x = instr.immediate as u16 & 0b00000_000_11111111;
 
             (c << 11) | (d << 8) | x
         }
-        Instruction::R(instr) => {
+        Mnemonic::R(instr) => {
             let f = instr.funct.id();
             let d = instr.dst.id();
             let s = instr.src.id();
@@ -40,7 +40,7 @@ pub mod tests {
     #[test]
     fn encode_i() {
         // LDI r1, #1
-        let ldi: Instruction = InstructionI {
+        let ldi: Mnemonic = InstructionI {
             opcode: Opcode::LDI,
             dst: Register::R1,
             immediate: 1.into(),
@@ -50,7 +50,7 @@ pub mod tests {
         assert_eq!(ldi_code, encode(ldi));
 
         // LDI r1, #-1
-        let ldi: Instruction = InstructionI {
+        let ldi: Mnemonic = InstructionI {
             opcode: Opcode::LDI,
             dst: Register::R1,
             immediate: (-1).into(),
@@ -60,7 +60,7 @@ pub mod tests {
         assert_eq!(ldi_code, encode(ldi));
 
         // ADDI r0, #120
-        let addi: Instruction = InstructionI {
+        let addi: Mnemonic = InstructionI {
             opcode: Opcode::ADDI,
             dst: Register::R0,
             immediate: 120.into(),
@@ -70,7 +70,7 @@ pub mod tests {
         assert_eq!(addi_code, encode(addi));
 
         // ADDI r0, #-120
-        let addi: Instruction = InstructionI {
+        let addi: Mnemonic = InstructionI {
             opcode: Opcode::ADDI,
             dst: Register::R0,
             immediate: (-120).into(),
@@ -83,7 +83,7 @@ pub mod tests {
     #[test]
     fn encode_r() {
         // LD r1, (r0)
-        let ld: Instruction = InstructionR {
+        let ld: Mnemonic = InstructionR {
             funct: Funct::LD,
             dst: Register::R1,
             src: Register::R0,
@@ -94,7 +94,7 @@ pub mod tests {
         assert_eq!(ld_code, encode(ld));
 
         // ST r1, (r0)
-        let st: Instruction = InstructionR {
+        let st: Mnemonic = InstructionR {
             funct: Funct::ST,
             dst: Register::R0,
             src: Register::R1,
@@ -104,7 +104,7 @@ pub mod tests {
         assert_eq!(st_code, encode(st));
 
         // ADD r0, r1
-        let add: Instruction = InstructionR {
+        let add: Mnemonic = InstructionR {
             funct: Funct::ADD,
             dst: Register::R0,
             src: Register::R1,

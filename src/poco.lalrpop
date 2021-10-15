@@ -3,40 +3,40 @@ use crate::{token::*, register::*, mnemonic::*};
 
 grammar;
 
-pub File: Vec<Instruction> = {
-    <Instruction*>
+pub File: Vec<Mnemonic> = {
+    <Mnemonic*>
 }
 
-pub Instruction: Instruction = {
-    "LD" <dst: Register> ","  <src: Parenthesized> => Instruction::R(
+pub Mnemonic: Mnemonic = {
+    "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::from(
         InstructionR {
             funct: Funct::LD,
             dst: dst,
             src: src,
         }
     ),
-    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Instruction::from(
+    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Mnemonic::from(
         InstructionI {
             opcode: Opcode::LDI,
             dst: dst,
             immediate: imm,
         }
     ),
-    "ST" <src: Register> "," <dst: Parenthesized> => Instruction::from(
+    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::from(
         InstructionR {
             funct: Funct::ST,
             dst: dst,
             src: src,
         }
     ),
-    "ADD" <dst: Register> "," <src: Register> => Instruction::from(
+    "ADD" <dst: Register> "," <src: Register> => Mnemonic::from(
         InstructionR {
             funct: Funct::ADD,
             dst: dst,
             src: src,
         }
     ),
-    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Instruction::from(
+    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::from(
         InstructionI {
             opcode: Opcode::ADDI,
             dst: dst,

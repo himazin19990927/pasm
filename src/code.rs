@@ -3,11 +3,11 @@ use crate::mnemonic::*;
 #[derive(Debug, PartialEq, Clone)]
 pub struct Code {
     code: u16,
-    instruction: Instruction,
+    instruction: Mnemonic,
 }
 
 impl Code {
-    pub fn new(code: u16, instruction: Instruction) -> Self {
+    pub fn new(code: u16, instruction: Mnemonic) -> Self {
         Code {
             code: code,
             instruction: instruction,
@@ -21,11 +21,11 @@ impl Code {
     pub fn get_line(&self, underscore: bool, mnemonic: bool) -> String {
         let code = if underscore {
             match self.instruction {
-                Instruction::I(_) => {
+                Mnemonic::I(_) => {
                     let (c, d, x) = self.as_i_instr();
                     format!("{:05b}_{:03b}_{:08b}", c, d, x)
                 }
-                Instruction::R(_) => {
+                Mnemonic::R(_) => {
                     let (d, s, f) = self.as_r_instr();
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }

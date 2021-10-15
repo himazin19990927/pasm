@@ -16,10 +16,10 @@ mod tests {
         };
     }
 
-    macro_rules! test_instruction {
+    macro_rules! test_mnemonic {
         ($input: expr, $expected: expr) => {
             let lexer = Lexer::new($input);
-            let result = poco::InstructionParser::new().parse(lexer).unwrap();
+            let result = poco::MnemonicParser::new().parse(lexer).unwrap();
 
             assert_eq!($expected, result);
         };
@@ -48,63 +48,63 @@ mod tests {
 
     #[test]
     fn instruction() {
-        test_instruction!(
+        test_mnemonic!(
             "LD r1, (r0)",
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::LD,
                 dst: Register::R1,
                 src: Register::R0,
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "LDI r1, #1",
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: 1.into(),
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "LDI r1, #-1",
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: (-1).into(),
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "ST r1, (r0)",
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::ST,
                 dst: Register::R0,
                 src: Register::R1,
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "ADD r0, r1",
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::ADD,
                 dst: Register::R0,
                 src: Register::R1,
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "ADDI r0, #1",
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: 1.into(),
             })
         );
 
-        test_instruction!(
+        test_mnemonic!(
             "ADDI r0, #-1",
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: (-1).into(),
@@ -122,27 +122,27 @@ ADD r0, r1
 ADDI r0, #1
 ";
         let expected1 = vec![
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::LD,
                 dst: Register::R1,
                 src: Register::R0,
             }),
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: 1.into(),
             }),
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::ST,
                 dst: Register::R0,
                 src: Register::R1,
             }),
-            Instruction::from(InstructionR {
+            Mnemonic::from(InstructionR {
                 funct: Funct::ADD,
                 dst: Register::R0,
                 src: Register::R1,
             }),
-            Instruction::from(InstructionI {
+            Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: 1.into(),
