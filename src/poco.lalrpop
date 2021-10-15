@@ -2,6 +2,10 @@ use crate::{token::*, lit::*, register::*, mnemonic::*};
 
 grammar;
 
+pub File: Vec<Instruction> = {
+    <Instruction*>
+}
+
 pub Instruction: Instruction = {
     "LD" <dst: Register> ","  <src: Parenthesized> => Instruction::R(
         InstructionR {
