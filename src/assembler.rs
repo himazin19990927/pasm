@@ -1,5 +1,18 @@
 use crate::{code::*, lit::*, mnemonic::*};
 
+pub fn assemble<I>(input: I) -> Vec<Code>
+where
+    I: IntoIterator<Item = Instruction>,
+{
+    let mut result = Vec::new();
+    for line in input {
+        let code = encode(line);
+        result.push(code);
+    }
+
+    return result;
+}
+
 pub fn encode(line: Instruction) -> Code {
     match line {
         Instruction::I(instr) => {
