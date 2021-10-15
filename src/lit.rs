@@ -1,8 +1,17 @@
 use std::num::ParseIntError;
+use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Lit {
     Int(LitInt),
+}
+
+impl Display for Lit {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self {
+            Lit::Int(l) => write!(f, "{}", l),
+        }
+    }
 }
 
 impl From<i8> for Lit {
@@ -16,6 +25,12 @@ impl From<i8> for Lit {
 #[derive(Debug, PartialEq, Clone)]
 pub struct LitInt {
     pub digits: String,
+}
+
+impl Display for LitInt {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.digits)
+    }
 }
 
 impl LitInt {

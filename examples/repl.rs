@@ -14,7 +14,7 @@ fn main() -> std::io::Result<()> {
         match input.as_str().trim() {
             "quit" | ":q" => break,
             input => match parse(input) {
-                Ok(res) => println!("{:#?}", &res),
+                Ok(res) => println!("{}", &res),
                 Err(err) => {
                     println!("Parse Error");
                     println!("{:#?}", &err);
