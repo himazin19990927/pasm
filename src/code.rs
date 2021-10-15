@@ -1,12 +1,17 @@
+use crate::mnemonic::*;
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Code {
     code: u16,
-    ty: Type,
+    instruction: Instruction,
 }
 
 impl Code {
-    pub fn new(code: u16, ty: Type) -> Self {
-        Code { code: code, ty: ty }
+    pub fn new(code: u16, instruction: Instruction) -> Self {
+        Code {
+            code: code,
+            instruction: instruction,
+        }
     }
 
     pub fn get_code(&self) -> u16 {
@@ -15,12 +20,12 @@ impl Code {
 
     pub fn get_line(&self, underscore: bool) -> String {
         if underscore {
-            match self.ty {
-                Type::I => {
+            match self.instruction {
+                Instruction::I(_) => {
                     let (c, d, x) = self.as_i_instr();
                     format!("{:05b}_{:03b}_{:08b}", c, d, x)
                 }
-                Type::R => {
+                Instruction::R(_) => {
                     let (d, s, f) = self.as_r_instr();
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }
@@ -45,10 +50,4 @@ impl Code {
 
         (c, d, x)
     }
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Type {
-    I,
-    R,
 }
