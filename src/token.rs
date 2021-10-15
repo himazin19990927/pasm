@@ -3,6 +3,9 @@ pub enum Token {
     /// A number token: `1`
     Num(String),
 
+    /// A ident token: `label0`, `end`
+    Ident(String),
+
     /// The `LD` token.
     LD,
 
@@ -50,6 +53,9 @@ pub enum Token {
 
     /// The `-` token.
     Minus,
+
+    /// The `:` token.
+    Colon,
 
     /// The `(` token
     OpenParen,

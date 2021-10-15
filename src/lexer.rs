@@ -95,6 +95,7 @@ impl<'input> Lexer<'input> {
                 ')' => Token::CloseParen,
                 '#' => Token::Sharp,
                 '-' => Token::Minus,
+                ':' => Token::Colon,
                 ',' => Token::Comma,
 
                 '0'..='9' => return Some(self.read_number()),
@@ -116,7 +117,7 @@ impl<'input> Lexer<'input> {
                         "r6" => Token::R6,
                         "r7" => Token::R7,
 
-                        _ => unimplemented!(),
+                        ident => Token::Ident(ident.to_string()),
                     };
 
                     return Some(token);
@@ -144,6 +145,8 @@ impl<'input> Iterator for Lexer<'input> {
 
 #[cfg(test)]
 mod tests {
+    use std::vec;
+
     use super::*;
 
     macro_rules! test_lexer {
@@ -187,8 +190,22 @@ mod tests {
         test_lexer!(",", vec![Token::Comma]);
         test_lexer!("#", vec![Token::Sharp]);
         test_lexer!("-", vec![Token::Minus]);
+        test_lexer!(":", vec![Token::Colon]);
         test_lexer!("(", vec![Token::OpenParen]);
         test_lexer!(")", vec![Token::CloseParen]);
+    }
+
+    #[test]
+    fn ident() {
+        test_lexer!("label", vec![Token::Ident("label".to_string())]);
+        test_lexer!(
+            ":label",
+            vec![Token::Colon, Token::Ident("label".to_string())]
+        );
+        test_lexer!(
+            ":label1",
+            vec![Token::Colon, Token::Ident("label1".to_string())]
+        );
     }
 
     #[test]
