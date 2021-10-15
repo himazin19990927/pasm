@@ -1,4 +1,4 @@
-use crate::{code::*, lit::*, mnemonic::*};
+use crate::{code::*, mnemonic::*};
 
 pub fn assemble<I>(input: I) -> Vec<Code>
 where
@@ -18,12 +18,7 @@ pub fn encode(line: Instruction) -> Code {
         Instruction::I(instr) => {
             let c = instr.opcode.id();
             let d = instr.dst.id();
-            let x: u16 = match &instr.immediate {
-                Lit::Int(imm) => match imm.digits.parse() {
-                    Ok(imm) => imm,
-                    Err(_) => unimplemented!(),
-                },
-            };
+            let x = instr.immediate as u16 & 0b00000_000_11111111;
 
             (c << 11) | (d << 8) | x
         }
@@ -54,14 +49,34 @@ pub mod tests {
         let ldi_code = Code::new(0b01000_001_00000001, ldi.clone());
         assert_eq!(ldi_code, encode(ldi));
 
-        // ADDI r0, #1
+        // LDI r1, #-1
+        let ldi: Instruction = InstructionI {
+            opcode: Opcode::LDI,
+            dst: Register::R1,
+            immediate: (-1).into(),
+        }
+        .into();
+        let ldi_code = Code::new(0b01000_001_11111111, ldi.clone());
+        assert_eq!(ldi_code, encode(ldi));
+
+        // ADDI r0, #120
         let addi: Instruction = InstructionI {
             opcode: Opcode::ADDI,
             dst: Register::R0,
-            immediate: 1.into(),
+            immediate: 120.into(),
         }
         .into();
-        let addi_code = Code::new(0b01100_000_00000001, addi.clone());
+        let addi_code = Code::new(0b01100_000_01111000, addi.clone());
+        assert_eq!(addi_code, encode(addi));
+
+        // ADDI r0, #-120
+        let addi: Instruction = InstructionI {
+            opcode: Opcode::ADDI,
+            dst: Register::R0,
+            immediate: (-120).into(),
+        }
+        .into();
+        let addi_code = Code::new(0b01100_000_10001000, addi.clone());
         assert_eq!(addi_code, encode(addi));
     }
 

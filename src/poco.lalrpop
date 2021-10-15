@@ -1,3 +1,4 @@
+use std::str::FromStr;
 use crate::{token::*, lit::*, register::*, mnemonic::*};
 
 grammar;
@@ -14,7 +15,7 @@ pub Instruction: Instruction = {
             src: src,
         }
     ),
-    "LDI" <dst: Register> "," "#" <imm: "Lit">  => Instruction::from(
+    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Instruction::from(
         InstructionI {
             opcode: Opcode::LDI,
             dst: dst,
@@ -35,7 +36,7 @@ pub Instruction: Instruction = {
             src: src,
         }
     ),
-    "ADDI" <dst: Register> "," "#" <imm: "Lit"> => Instruction::from(
+    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Instruction::from(
         InstructionI {
             opcode: Opcode::ADDI,
             dst: dst,
@@ -58,6 +59,23 @@ pub Register: Register = {
 Parenthesized: Register = {
     "(" <Register> ")",
 };
+
+Immediate: i8 = {
+    "-" <imm: "Lit"> => {
+        let digits = match imm {
+            Lit::Int(lit) => lit.digits,
+        };
+
+        -i8::from_str(digits.as_str()).unwrap()
+    },
+    <imm: "Lit"> => {
+        let digits = match imm {
+            Lit::Int(lit) => lit.digits,
+        };
+
+        i8::from_str(digits.as_str()).unwrap()
+    },
+}
 
 extern {
     type Location = ();
@@ -82,6 +100,7 @@ extern {
 
         "," => Token::Comma,
         "#" => Token::Sharp,
+        "-" => Token::Minus,
         "(" => Token::OpenParen,
         ")" => Token::CloseParen,
     }

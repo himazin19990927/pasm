@@ -50,6 +50,9 @@ pub enum Token {
     /// The `#` token.
     Sharp,
 
+    /// The `-` token.
+    Minus,
+
     /// The `(` token
     OpenParen,
 

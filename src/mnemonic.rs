@@ -1,4 +1,4 @@
-use crate::{lit::*, register::Register};
+use crate::register::Register;
 use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
@@ -32,7 +32,7 @@ impl From<InstructionR> for Instruction {
 pub struct InstructionI {
     pub opcode: Opcode,
     pub dst: Register,
-    pub immediate: Lit,
+    pub immediate: i8,
 }
 
 impl Display for InstructionI {

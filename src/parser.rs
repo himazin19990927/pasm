@@ -67,6 +67,15 @@ mod tests {
         );
 
         test_instruction!(
+            "LDI r1, #-1",
+            Instruction::from(InstructionI {
+                opcode: Opcode::LDI,
+                dst: Register::R1,
+                immediate: (-1).into(),
+            })
+        );
+
+        test_instruction!(
             "ST r1, (r0)",
             Instruction::from(InstructionR {
                 funct: Funct::ST,
@@ -90,6 +99,15 @@ mod tests {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: 1.into(),
+            })
+        );
+
+        test_instruction!(
+            "ADDI r0, #-1",
+            Instruction::from(InstructionI {
+                opcode: Opcode::ADDI,
+                dst: Register::R0,
+                immediate: (-1).into(),
             })
         );
     }

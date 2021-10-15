@@ -94,6 +94,7 @@ impl<'input> Lexer<'input> {
                 '(' => Token::OpenParen,
                 ')' => Token::CloseParen,
                 '#' => Token::Sharp,
+                '-' => Token::Minus,
                 ',' => Token::Comma,
 
                 '0'..='9' => return Some(self.read_number()),
@@ -172,15 +173,22 @@ mod tests {
         test_lexer!("1", vec![token_int!(1)]);
         test_lexer!("16", vec![token_int!(16)]);
 
+        test_lexer!("-1", vec![Token::Minus, token_int!(1)]);
+        test_lexer!("-16", vec![Token::Minus, token_int!(16)]);
+
         test_lexer!("#0", vec![Token::Sharp, token_int!(0)]);
         test_lexer!("#1", vec![Token::Sharp, token_int!(1)]);
         test_lexer!("#16", vec![Token::Sharp, token_int!(16)]);
+
+        test_lexer!("#-1", vec![Token::Sharp, Token::Minus, token_int!(1)]);
+        test_lexer!("#-16", vec![Token::Sharp, Token::Minus, token_int!(16)]);
     }
 
     #[test]
     fn symbol() {
         test_lexer!(",", vec![Token::Comma]);
         test_lexer!("#", vec![Token::Sharp]);
+        test_lexer!("-", vec![Token::Minus]);
         test_lexer!("(", vec![Token::OpenParen]);
         test_lexer!(")", vec![Token::CloseParen]);
     }
