@@ -1,9 +1,7 @@
-use crate::lit::*;
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
-    /// A literal token: `1`
-    Lit(Lit),
+    /// A number token: `1`
+    Num(String),
 
     /// The `LD` token.
     LD,

@@ -1,7 +1,6 @@
 pub mod assembler;
 pub mod code;
 pub mod lexer;
-pub mod lit;
 pub mod mnemonic;
 pub mod parser;
 pub mod register;

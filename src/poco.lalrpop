@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use crate::{token::*, lit::*, register::*, mnemonic::*};
+use crate::{token::*, register::*, mnemonic::*};
 
 grammar;
 
@@ -61,20 +61,8 @@ Parenthesized: Register = {
 };
 
 Immediate: i8 = {
-    "-" <imm: "Lit"> => {
-        let digits = match imm {
-            Lit::Int(lit) => lit.digits,
-        };
-
-        -i8::from_str(digits.as_str()).unwrap()
-    },
-    <imm: "Lit"> => {
-        let digits = match imm {
-            Lit::Int(lit) => lit.digits,
-        };
-
-        i8::from_str(digits.as_str()).unwrap()
-    },
+    "-" <imm: "Num"> => -i8::from_str(imm.as_str()).unwrap(),
+    <imm: "Num"> => i8::from_str(imm.as_str()).unwrap(),
 }
 
 extern {
@@ -82,7 +70,7 @@ extern {
     type Error = ();
 
     enum Token{
-        "Lit" => Token::Lit(<Lit>),
+        "Num" => Token::Num(<String>),
         "LD" => Token::LD,
         "LDI" => Token::LDI,
         "ST" => Token::ST,

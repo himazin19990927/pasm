@@ -1,4 +1,4 @@
-use crate::{lit::*, token::*};
+use crate::token::*;
 use core::panic;
 use std::str::Chars;
 
@@ -54,7 +54,7 @@ impl<'input> Lexer<'input> {
             break;
         }
 
-        Token::Lit(Lit::Int(LitInt { digits }))
+        Token::Num(digits)
     }
 
     fn read_str(&mut self) -> String {
@@ -159,29 +159,27 @@ mod tests {
         };
     }
 
-    macro_rules! token_int {
+    macro_rules! token_num {
         ($value: expr) => {
-            Token::Lit(Lit::Int(LitInt {
-                digits: $value.to_string(),
-            }))
+            Token::Num($value.to_string())
         };
     }
 
     #[test]
     fn num() {
-        test_lexer!("0", vec![token_int!(0)]);
-        test_lexer!("1", vec![token_int!(1)]);
-        test_lexer!("16", vec![token_int!(16)]);
+        test_lexer!("0", vec![token_num!(0)]);
+        test_lexer!("1", vec![token_num!(1)]);
+        test_lexer!("16", vec![token_num!(16)]);
 
-        test_lexer!("-1", vec![Token::Minus, token_int!(1)]);
-        test_lexer!("-16", vec![Token::Minus, token_int!(16)]);
+        test_lexer!("-1", vec![Token::Minus, token_num!(1)]);
+        test_lexer!("-16", vec![Token::Minus, token_num!(16)]);
 
-        test_lexer!("#0", vec![Token::Sharp, token_int!(0)]);
-        test_lexer!("#1", vec![Token::Sharp, token_int!(1)]);
-        test_lexer!("#16", vec![Token::Sharp, token_int!(16)]);
+        test_lexer!("#0", vec![Token::Sharp, token_num!(0)]);
+        test_lexer!("#1", vec![Token::Sharp, token_num!(1)]);
+        test_lexer!("#16", vec![Token::Sharp, token_num!(16)]);
 
-        test_lexer!("#-1", vec![Token::Sharp, Token::Minus, token_int!(1)]);
-        test_lexer!("#-16", vec![Token::Sharp, Token::Minus, token_int!(16)]);
+        test_lexer!("#-1", vec![Token::Sharp, Token::Minus, token_num!(1)]);
+        test_lexer!("#-16", vec![Token::Sharp, Token::Minus, token_num!(16)]);
     }
 
     #[test]
@@ -235,7 +233,7 @@ mod tests {
                 Token::R0,
                 Token::Comma,
                 Token::Sharp,
-                token_int!(1),
+                token_num!(1),
             ]
         );
 
@@ -263,7 +261,7 @@ mod tests {
                 Token::R0,
                 Token::Comma,
                 Token::Sharp,
-                token_int!(1),
+                token_num!(1),
             ]
         );
     }
