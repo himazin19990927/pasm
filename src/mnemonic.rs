@@ -41,7 +41,7 @@ pub enum Opcode {
 impl Opcode {
     pub fn id(&self) -> u16 {
         match &self {
-            Opcode::LDI => 0b0100,
+            Opcode::LDI => 0b01000,
             Opcode::ADDI => 0b01100,
         }
     }

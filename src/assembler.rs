@@ -1,9 +1,20 @@
-use crate::{code::*, mnemonic::*};
+use crate::{code::*, lit::*, mnemonic::*};
 
 pub fn encode(line: Instruction) -> Code {
     match line {
-        Instruction::I(_) => {
-            todo!()
+        Instruction::I(instr) => {
+            let c = instr.opcode.id();
+            let d = instr.dst.id();
+            let x: u16 = match instr.immediate {
+                Lit::Int(imm) => match imm.digits.parse() {
+                    Ok(imm) => imm,
+                    Err(_) => unimplemented!(),
+                },
+            };
+
+            let code = (c << 11) | (d << 8) | x;
+
+            Code::new(code, Type::I)
         }
         Instruction::R(instr) => {
             let f = instr.funct.id();
@@ -18,6 +29,29 @@ pub fn encode(line: Instruction) -> Code {
 #[cfg(test)]
 pub mod tests {
     use crate::{assembler::encode, code::*, mnemonic::*, register::*};
+
+    #[test]
+    fn encode_i() {
+        // LDI r1, #1
+        let ldi = InstructionI {
+            opcode: Opcode::LDI,
+            dst: Register::R1,
+            immediate: 1.into(),
+        }
+        .into();
+        let ldi_code = Code::new(0b01000_001_00000001, Type::I);
+        assert_eq!(ldi_code, encode(ldi));
+
+        // ADDI r0, #1
+        let addi = InstructionI {
+            opcode: Opcode::ADDI,
+            dst: Register::R0,
+            immediate: 1.into(),
+        }
+        .into();
+        let addi_code = Code::new(0b01100_000_00000001, Type::I);
+        assert_eq!(addi_code, encode(addi));
+    }
 
     #[test]
     fn encode_r() {
