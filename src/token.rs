@@ -24,6 +24,9 @@ pub enum Token {
     /// The `JMP` token.
     JMP,
 
+    /// The `BEZ` token.
+    BEZ,
+
     /// The `R0` token.
     R0,
 
