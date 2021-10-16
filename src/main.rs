@@ -38,7 +38,7 @@ fn main() -> std::io::Result<()> {
         }
     };
 
-    let mnemonics = convert(items);
+    let (mnemonics, _) = convert(items);
     let codes = assemble(mnemonics);
 
     let output_file = File::create(output_path)?;

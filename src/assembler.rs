@@ -1,18 +1,27 @@
 use crate::{code::*, mnemonic::*};
+use std::collections::HashMap;
 
-pub fn convert<I>(input: I) -> Vec<Mnemonic>
+pub fn convert<I>(input: I) -> (Vec<Mnemonic>, HashMap<String, i8>)
 where
     I: IntoIterator<Item = Item>,
 {
-    let mut result = Vec::new();
+    let mut mnemonics = Vec::new();
+    let mut table = HashMap::new();
+
+    let mut current_index = 0;
     for line in input {
         match line {
-            Item::Label(_) => todo!(),
-            Item::Mnemonic(m) => result.push(m),
+            Item::Label(label) => {
+                table.insert(label, current_index);
+            }
+            Item::Mnemonic(m) => {
+                current_index += 1;
+                mnemonics.push(m);
+            }
         }
     }
 
-    return result;
+    return (mnemonics, table);
 }
 
 pub fn assemble<I>(input: I) -> Vec<Code>
@@ -50,7 +59,37 @@ pub fn encode(line: Mnemonic) -> Code {
 
 #[cfg(test)]
 pub mod tests {
-    use crate::{assembler::encode, code::*, mnemonic::*, register::*};
+    use crate::{
+        assembler::{convert, encode},
+        code::*,
+        mnemonic::*,
+        register::*,
+    };
+
+    #[test]
+    fn generate_table() {
+        {
+            let items = vec![
+                Item::label("init".into()),
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 0
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 1
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 2
+                Item::label("loop".into()),
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 3
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 4
+                Item::label("end".into()),
+                Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 5
+
+
+                
+            ];
+
+            let (_, table) = convert(items);
+            assert_eq!(table["init".into()], 0);
+            assert_eq!(table["loop".into()], 3);
+            assert_eq!(table["end".into()], 5);
+        }
+    }
 
     #[test]
     fn encode_i() {
