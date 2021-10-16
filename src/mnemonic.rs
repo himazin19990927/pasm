@@ -218,3 +218,11 @@ impl Display for OpcodeB {
         }
     }
 }
+
+impl OpcodeB {
+    pub fn id(&self) -> u16 {
+        match &self {
+            OpcodeB::BEZ => 0b10000,
+        }
+    }
+}

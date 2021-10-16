@@ -53,14 +53,22 @@ pub fn encode(line: Mnemonic, table: &HashMap<String, i16>, current_addr: i16) -
             (d << 8) | (s << 5) | f
         }
         Mnemonic::J(instr) => {
-            let f = instr.opcode.id();
+            let c = instr.opcode.id();
 
             let dst_addr = table[&instr.label];
             let addr = dst_addr - current_addr;
 
-            (f << 11) | addr as u16 & 0b00000_11111111111
+            (c << 11) | addr as u16 & 0b00000_11111111111
         }
-        Mnemonic::B(_) => todo!(),
+        Mnemonic::B(instr) => {
+            let c = instr.opcode.id();
+            let s = instr.src.id();
+
+            let dst_addr = table[&instr.label];
+            let addr = dst_addr - current_addr;
+
+            (c << 11) | (s << 8) | addr as u16 & (0b00000_000_11111111)
+        }
     };
 
     Code::new(code, line)
@@ -148,7 +156,7 @@ pub mod tests {
     fn encode_j() {
         let items = vec![
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 0
-            Item::instr_j(OpcodeJ::JMP, "label".into()),            // 1
+            Item::instr_j(OpcodeJ::JMP, "label".into()),           // 1
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 2
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 3
             Item::label("label".into()),                           // :label
@@ -157,10 +165,10 @@ pub mod tests {
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 5
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 6
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 7
-            Item::instr_j(OpcodeJ::JMP, "loop".into()),             // 8
+            Item::instr_j(OpcodeJ::JMP, "loop".into()),            // 8
             Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 9
             Item::label("end".into()),                             // :end
-            Item::instr_j(OpcodeJ::JMP, "end".into()),              // 10
+            Item::instr_j(OpcodeJ::JMP, "end".into()),             // 10
         ];
 
         let (_, table) = convert(items);
@@ -179,5 +187,42 @@ pub mod tests {
         let jmp_end = Mnemonic::instr_j(OpcodeJ::JMP, "end".into());
         let jmp_end_code = Code::new(0b10100_00000000000, jmp_end.clone());
         assert_eq!(jmp_end_code, encode(jmp_end, &table, 10));
+    }
+
+    #[test]
+    fn encode_b() {
+        let items = vec![
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 0
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "label".into()), // 1
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 2
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 3
+            Item::label("label".into()),                           // :label
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 4
+            Item::label("loop".into()),                            // :loop
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 5
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 6
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 7
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "loop".into()), // 8
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 9
+            Item::label("end".into()),                             // :end
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "ebd".into()), // 10
+        ];
+
+        let (_, table) = convert(items);
+
+        // JMP label (1 -> 4 => +3)
+        let bez_label = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "label".into());
+        let bez_label_code = Code::new(0b10000_000_00000011, bez_label.clone());
+        assert_eq!(bez_label_code, encode(bez_label, &table, 1));
+
+        // JMP loop (8 -> 5 => -3)
+        let bez_loop = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "loop".into());
+        let bez_loop_code = Code::new(0b10000_000_11111101, bez_loop.clone());
+        assert_eq!(bez_loop_code, encode(bez_loop, &table, 8));
+
+        // JMP end (10 -> 10 => 0)
+        let bez_end = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "end".into());
+        let bez_end_code = Code::new(0b10000_000_00000000, bez_end.clone());
+        assert_eq!(bez_end_code, encode(bez_end, &table, 10));
     }
 }
