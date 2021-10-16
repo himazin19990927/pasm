@@ -75,6 +75,14 @@ mod tests {
     }
 
     #[test]
+    fn instruction_b() {
+        test_item!(
+            "BEZ r0, label",
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "label".into())
+        );
+    }
+
+    #[test]
     fn label() {
         test_item!(":label", Item::Label("label".to_string()));
         test_item!(":label0", Item::Label("label0".to_string()));
@@ -86,6 +94,7 @@ mod tests {
         let input1 = r"
 :start
 LD r1, (r0)
+BEZ r0, jump1
 :jump1
 LDI r1, #1
 :jump2 ST r1, (r0)
@@ -97,6 +106,7 @@ JMP end
         let expected1 = vec![
             Item::label("start".to_string()),
             Item::instr_r(Funct::LD, Register::R1, Register::R0),
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "jump1".into()),
             Item::label("jump1".to_string()),
             Item::instr_i(Opcode::LDI, Register::R1, 1.into()),
             Item::label("jump2".to_string()),

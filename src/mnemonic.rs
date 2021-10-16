@@ -32,6 +32,10 @@ impl Item {
     pub fn instr_j(opcode: OpcodeJ, label: String) -> Self {
         Self::Mnemonic(Mnemonic::J(InstructionJ { opcode, label }))
     }
+
+    pub fn instr_b(opcode: OpcodeB, src: Register, label: String) -> Self {
+        Self::Mnemonic(Mnemonic::instr_b(opcode, src, label))
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -39,6 +43,7 @@ pub enum Mnemonic {
     I(InstructionI),
     R(InstructionR),
     J(InstructionJ),
+    B(InstructionB),
 }
 
 impl Mnemonic {
@@ -57,6 +62,10 @@ impl Mnemonic {
     pub fn instr_j(opcode: OpcodeJ, label: String) -> Self {
         Mnemonic::J(InstructionJ { opcode, label })
     }
+
+    pub fn instr_b(opcode: OpcodeB, src: Register, label: String) -> Self {
+        Mnemonic::B(InstructionB { opcode, src, label })
+    }
 }
 
 impl Display for Mnemonic {
@@ -65,6 +74,7 @@ impl Display for Mnemonic {
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
             Mnemonic::J(i) => write!(f, "{}", i),
+            Mnemonic::B(i) => write!(f, "{}", i),
         }
     }
 }
@@ -179,6 +189,32 @@ impl OpcodeJ {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeJ::JMP => 0b10100,
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct InstructionB {
+    pub opcode: OpcodeB,
+    pub src: Register,
+    pub label: String,
+}
+
+impl Display for InstructionB {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}, {}", self.opcode, self.src, self.label)
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum OpcodeB {
+    BEZ,
+}
+
+impl Display for OpcodeB {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            OpcodeB::BEZ => write!(f, "BEZ"),
         }
     }
 }

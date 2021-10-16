@@ -19,6 +19,7 @@ Mnemonic: Mnemonic = {
     "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(Funct::ADD, dst, src),
     "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(Opcode::ADDI, dst, imm),
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
+    "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
 };
 
 pub Register: Register = {
@@ -55,6 +56,7 @@ extern {
         "ADD" => Token::ADD,
         "ADDI" => Token::ADDI,
         "JMP" => Token::JMP,
+        "BEZ" => Token::BEZ,
 
         "R0" => Token::R0,
         "R1" => Token::R1,

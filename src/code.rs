@@ -30,6 +30,8 @@ impl Code {
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }
                 Mnemonic::J(_) => todo!(),
+                Mnemonic::B(_) => todo!(),
+                
             }
         } else {
             format!("{:016b}", self.code)

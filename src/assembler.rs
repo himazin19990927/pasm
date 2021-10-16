@@ -60,6 +60,7 @@ pub fn encode(line: Mnemonic, table: &HashMap<String, i16>, current_addr: i16) -
 
             (f << 11) | addr as u16 & 0b00000_11111111111
         }
+        Mnemonic::B(_) => todo!(),
     };
 
     Code::new(code, line)
