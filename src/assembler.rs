@@ -79,9 +79,6 @@ pub mod tests {
                 Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 4
                 Item::label("end".into()),
                 Item::instr_r(Funct::ADD, Register::R0, Register::R1), // 5
-
-
-                
             ];
 
             let (_, table) = convert(items);

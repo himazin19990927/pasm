@@ -91,12 +91,12 @@ impl<'input> Lexer<'input> {
 
         let token = match self.ch {
             Some(ch) => Some(match ch {
-                '(' => Token::OpenParen,
-                ')' => Token::CloseParen,
                 '#' => Token::Sharp,
                 '-' => Token::Minus,
-                ':' => Token::Colon,
                 ',' => Token::Comma,
+                ':' => Token::Colon,
+                '(' => Token::OpenParen,
+                ')' => Token::CloseParen,
 
                 '0'..='9' => return Some(self.read_number()),
 
@@ -187,9 +187,9 @@ mod tests {
 
     #[test]
     fn symbol() {
-        test_lexer!(",", vec![Token::Comma]);
         test_lexer!("#", vec![Token::Sharp]);
         test_lexer!("-", vec![Token::Minus]);
+        test_lexer!(",", vec![Token::Comma]);
         test_lexer!(":", vec![Token::Colon]);
         test_lexer!("(", vec![Token::OpenParen]);
         test_lexer!(")", vec![Token::CloseParen]);

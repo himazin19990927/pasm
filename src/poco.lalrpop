@@ -47,6 +47,7 @@ extern {
     enum Token{
         "Num" => Token::Num(<String>),
         "Ident" => Token::Ident(<String>),
+
         "LD" => Token::LD,
         "LDI" => Token::LDI,
         "ST" => Token::ST,
@@ -62,9 +63,9 @@ extern {
         "R6" => Token::R6,
         "R7" => Token::R7,
 
-        "," => Token::Comma,
         "#" => Token::Sharp,
         "-" => Token::Minus,
+        "," => Token::Comma,
         ":" => Token::Colon,
         "(" => Token::OpenParen,
         ")" => Token::CloseParen,

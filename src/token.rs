@@ -45,14 +45,14 @@ pub enum Token {
     /// The `R7` token.
     R7,
 
-    /// The `,` token.
-    Comma,
-
     /// The `#` token.
     Sharp,
 
     /// The `-` token.
     Minus,
+
+    /// The `,` token.
+    Comma,
 
     /// The `:` token.
     Colon,
