@@ -22,16 +22,21 @@ impl Code {
         let code = if underscore {
             match self.instruction {
                 Mnemonic::I(_) => {
-                    let (c, d, x) = self.as_i_instr();
+                    let (c, d, x) = self.split_as_i_instr();
                     format!("{:05b}_{:03b}_{:08b}", c, d, x)
                 }
                 Mnemonic::R(_) => {
-                    let (d, s, f) = self.as_r_instr();
+                    let (d, s, f) = self.split_as_r_instr();
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }
-                Mnemonic::J(_) => todo!(),
-                Mnemonic::B(_) => todo!(),
-                
+                Mnemonic::J(_) => {
+                    let (c, x) = self.split_as_j_instr();
+                    format!("{:05b}_{:011b}", c, x)
+                }
+                Mnemonic::B(_) => {
+                    let (c, s, x) = self.split_as_i_instr();
+                    format!("{:05b}_{:03b}_{:08b}", c, s, x)
+                }
             }
         } else {
             format!("{:016b}", self.code)
@@ -50,7 +55,7 @@ impl Code {
         }
     }
 
-    fn as_r_instr(&self) -> (u16, u16, u16) {
+    fn split_as_r_instr(&self) -> (u16, u16, u16) {
         let d = (0b00000_111_000_00000 & self.code) >> 8;
         let s = (0b00000_000_111_00000 & self.code) >> 5;
         let f = 0b00000_000_000_11111 & self.code;
@@ -58,11 +63,18 @@ impl Code {
         (d, s, f)
     }
 
-    fn as_i_instr(&self) -> (u16, u16, u16) {
+    fn split_as_i_instr(&self) -> (u16, u16, u16) {
         let c = (0b11111_000_00000000 & self.code) >> 11;
         let d = (0b00000_111_00000000 & self.code) >> 8;
         let x = 0b00000_000_11111111 & self.code;
 
         (c, d, x)
+    }
+
+    fn split_as_j_instr(&self) -> (u16, u16) {
+        let c = (0b11111_00000000000 & self.code) >> 11;
+        let x = 0b00000_11111111111 & self.code;
+
+        (c, x)
     }
 }
