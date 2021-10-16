@@ -18,7 +18,7 @@ Mnemonic: Mnemonic = {
     "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(Funct::ST, dst, src),
     "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(Funct::ADD, dst, src),
     "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(Opcode::ADDI, dst, imm),
-    "JMP" <label: "Ident"> => Mnemonic::instr_j(FunctJ::JMP, label),
+    "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
 };
 
 pub Register: Register = {

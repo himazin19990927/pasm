@@ -29,8 +29,8 @@ impl Item {
         Self::Mnemonic(Mnemonic::instr_r(funct, dst, src))
     }
 
-    pub fn instr_j(funct: FunctJ, label: String) -> Self {
-        Self::Mnemonic(Mnemonic::J(InstructionJ { funct, label }))
+    pub fn instr_j(opcode: OpcodeJ, label: String) -> Self {
+        Self::Mnemonic(Mnemonic::J(InstructionJ { opcode, label }))
     }
 }
 
@@ -54,8 +54,8 @@ impl Mnemonic {
         Mnemonic::R(InstructionR { funct, dst, src })
     }
 
-    pub fn instr_j(funct: FunctJ, label: String) -> Self {
-        Mnemonic::J(InstructionJ { funct, label })
+    pub fn instr_j(opcode: OpcodeJ, label: String) -> Self {
+        Mnemonic::J(InstructionJ { opcode, label })
     }
 }
 
@@ -101,13 +101,13 @@ impl Display for InstructionR {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct InstructionJ {
-    pub funct: FunctJ,
+    pub opcode: OpcodeJ,
     pub label: String,
 }
 
 impl Display for InstructionJ {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{} {}", self.funct, self.label)
+        write!(f, "{} {}", self.opcode, self.label)
     }
 }
 
@@ -163,14 +163,22 @@ impl Funct {
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum FunctJ {
+pub enum OpcodeJ {
     JMP,
 }
 
-impl Display for FunctJ {
+impl Display for OpcodeJ {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            FunctJ::JMP => write!(f, "JMP"),
+            OpcodeJ::JMP => write!(f, "JMP"),
+        }
+    }
+}
+
+impl OpcodeJ {
+    pub fn id(&self) -> u16 {
+        match &self {
+            OpcodeJ::JMP => 0b10100,
         }
     }
 }

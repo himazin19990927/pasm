@@ -38,8 +38,8 @@ fn main() -> std::io::Result<()> {
         }
     };
 
-    let (mnemonics, _) = convert(items);
-    let codes = assemble(mnemonics);
+    let (mnemonics, table) = convert(items);
+    let codes = assemble(mnemonics, &table);
 
     let output_file = File::create(output_path)?;
     let mut output_writer = BufWriter::new(output_file);

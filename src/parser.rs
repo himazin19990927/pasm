@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn instruction_j() {
-        test_item!("JMP label", Item::instr_j(FunctJ::JMP, "label".into()));
+        test_item!("JMP label", Item::instr_j(OpcodeJ::JMP, "label".into()));
     }
 
     #[test]
@@ -103,7 +103,7 @@ JMP end
             Item::instr_r(Funct::ST, Register::R0, Register::R1),
             Item::instr_r(Funct::ADD, Register::R0, Register::R1),
             Item::instr_i(Opcode::ADDI, Register::R0, 1.into()),
-            Item::instr_j(FunctJ::JMP, "end".into()),
+            Item::instr_j(OpcodeJ::JMP, "end".into()),
             Item::label("end".to_string()),
         ];
         test_file!(input1, expected1);
