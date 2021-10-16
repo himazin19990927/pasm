@@ -11,7 +11,7 @@ pub enum Mnemonic {
 impl Display for Mnemonic {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self {
-            Mnemonic::Label(_) => todo!(),
+            Mnemonic::Label(l) => write!(f, ":{}", l),
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
         }
