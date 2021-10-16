@@ -28,12 +28,17 @@ impl Item {
     pub fn instr_r(funct: Funct, dst: Register, src: Register) -> Self {
         Self::Mnemonic(Mnemonic::instr_r(funct, dst, src))
     }
+
+    pub fn instr_j(funct: FunctJ, label: String) -> Self {
+        Self::Mnemonic(Mnemonic::J(InstructionJ { funct, label }))
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Mnemonic {
     I(InstructionI),
     R(InstructionR),
+    J(InstructionJ),
 }
 
 impl Mnemonic {
@@ -48,6 +53,10 @@ impl Mnemonic {
     pub fn instr_r(funct: Funct, dst: Register, src: Register) -> Self {
         Mnemonic::R(InstructionR { funct, dst, src })
     }
+
+    pub fn instr_j(funct: FunctJ, label: String) -> Self {
+        Mnemonic::J(InstructionJ { funct, label })
+    }
 }
 
 impl Display for Mnemonic {
@@ -55,6 +64,7 @@ impl Display for Mnemonic {
         match &self {
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
+            Mnemonic::J(i) => write!(f, "{}", i),
         }
     }
 }
@@ -86,6 +96,18 @@ impl Display for InstructionR {
             Funct::ST => write!(f, "{} {}, ({})", self.funct, self.src, self.dst),
             _ => write!(f, "{} {}, {}", self.funct, self.dst, self.src),
         }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct InstructionJ {
+    pub funct: FunctJ,
+    pub label: String,
+}
+
+impl Display for InstructionJ {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {}", self.funct, self.label)
     }
 }
 
@@ -136,6 +158,19 @@ impl Funct {
             Funct::LD => 0b01001,
             Funct::ST => 0b01000,
             Funct::ADD => 0b00110,
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum FunctJ {
+    JMP,
+}
+
+impl Display for FunctJ {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            FunctJ::JMP => write!(f, "JMP"),
         }
     }
 }

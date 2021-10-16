@@ -52,6 +52,7 @@ pub fn encode(line: Mnemonic) -> Code {
             let s = instr.src.id();
             (d << 8) | (s << 5) | f
         }
+        Mnemonic::J(_) => todo!(),
     };
 
     Code::new(code, line)

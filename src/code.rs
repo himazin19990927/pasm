@@ -29,6 +29,7 @@ impl Code {
                     let (d, s, f) = self.as_r_instr();
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }
+                Mnemonic::J(_) => todo!(),
             }
         } else {
             format!("{:016b}", self.code)

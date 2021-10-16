@@ -70,6 +70,11 @@ mod tests {
     }
 
     #[test]
+    fn instruction_j() {
+        test_item!("JMP label", Item::instr_j(FunctJ::JMP, "label".into()));
+    }
+
+    #[test]
     fn label() {
         test_item!(":label", Item::Label("label".to_string()));
         test_item!(":label0", Item::Label("label0".to_string()));
@@ -86,6 +91,7 @@ LDI r1, #1
 :jump2 ST r1, (r0)
 ADD r0, r1
 ADDI r0, #1
+JMP end
 :end
 ";
         let expected1 = vec![
@@ -97,6 +103,7 @@ ADDI r0, #1
             Item::instr_r(Funct::ST, Register::R0, Register::R1),
             Item::instr_r(Funct::ADD, Register::R0, Register::R1),
             Item::instr_i(Opcode::ADDI, Register::R0, 1.into()),
+            Item::instr_j(FunctJ::JMP, "end".into()),
             Item::label("end".to_string()),
         ];
         test_file!(input1, expected1);
