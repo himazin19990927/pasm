@@ -1,4 +1,4 @@
-use pasm::{mnemonic::*, lexer::*, parser::*, token::*};
+use pasm::{lexer::*, mnemonic::*, parser::*, token::*};
 use std::io::{stdout, Write};
 
 use lalrpop_util::ParseError;
@@ -18,7 +18,7 @@ fn main() -> std::io::Result<()> {
                 Err(err) => {
                     println!("Parse Error");
                     println!("{:#?}", &err);
-                },
+                }
             },
         }
     }
@@ -26,7 +26,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn parse(input: &str) -> Result<Mnemonic, ParseError<(), Token, ()>> {
+fn parse(input: &str) -> Result<Item, ParseError<(), Token, ()>> {
     let lexer = Lexer::new(input);
-    poco::MnemonicParser::new().parse(lexer)
+    poco::ItemParser::new().parse(lexer)
 }

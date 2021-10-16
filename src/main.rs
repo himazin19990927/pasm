@@ -28,7 +28,7 @@ fn main() -> std::io::Result<()> {
 
     let input_file = fs::read_to_string(input_path)?;
 
-    let instructions = match parse_file(input_file.as_str()) {
+    let items = match parse_file(input_file.as_str()) {
         Ok(result) => result,
         Err(err) => {
             println!("Parse error");
@@ -38,7 +38,8 @@ fn main() -> std::io::Result<()> {
         }
     };
 
-    let codes = assemble(instructions);
+    let mnemonics = convert(items);
+    let codes = assemble(mnemonics);
 
     let output_file = File::create(output_path)?;
     let mut output_writer = BufWriter::new(output_file);
@@ -53,7 +54,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn parse_file(input: &str) -> Result<Vec<Mnemonic>, ParseError<(), Token, ()>> {
+fn parse_file(input: &str) -> Result<Vec<Item>, ParseError<(), Token, ()>> {
     let lexer = Lexer::new(input);
     FileParser::new().parse(lexer)
 }

@@ -2,8 +2,22 @@ use crate::register::Register;
 use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum Mnemonic {
+pub enum Item {
     Label(String),
+    Mnemonic(Mnemonic),
+}
+
+impl Display for Item {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match &self {
+            Item::Label(l) => write!(f, ":{}", l),
+            Item::Mnemonic(m) => write!(f, "{}", m),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum Mnemonic {
     I(InstructionI),
     R(InstructionR),
 }
@@ -11,7 +25,6 @@ pub enum Mnemonic {
 impl Display for Mnemonic {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self {
-            Mnemonic::Label(l) => write!(f, ":{}", l),
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
         }

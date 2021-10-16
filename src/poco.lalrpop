@@ -3,13 +3,16 @@ use crate::{token::*, register::*, mnemonic::*};
 
 grammar;
 
-pub File: Vec<Mnemonic> = {
-    <Mnemonic*>
+pub File: Vec<Item> = {
+    <Item*>
 }
 
-pub Mnemonic: Mnemonic = {
-    ":" <label: "Ident"> => Mnemonic::Label(label),
+pub Item: Item = {
+    ":" <label: "Ident"> => Item::Label(label),
+    <mnemonic: Mnemonic> => Item::Mnemonic(mnemonic),
+}
 
+Mnemonic: Mnemonic = {
     "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::from(
         InstructionR {
             funct: Funct::LD,

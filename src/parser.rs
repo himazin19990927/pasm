@@ -16,10 +16,10 @@ mod tests {
         };
     }
 
-    macro_rules! test_mnemonic {
+    macro_rules! test_item {
         ($input: expr, $expected: expr) => {
             let lexer = Lexer::new($input);
-            let result = poco::MnemonicParser::new().parse(lexer).unwrap();
+            let result = poco::ItemParser::new().parse(lexer).unwrap();
 
             assert_eq!($expected, result);
         };
@@ -48,75 +48,75 @@ mod tests {
 
     #[test]
     fn instruction() {
-        test_mnemonic!(
+        test_item!(
             "LD r1, (r0)",
-            Mnemonic::from(InstructionR {
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::LD,
                 dst: Register::R1,
                 src: Register::R0,
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "LDI r1, #1",
-            Mnemonic::from(InstructionI {
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: 1.into(),
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "LDI r1, #-1",
-            Mnemonic::from(InstructionI {
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: (-1).into(),
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "ST r1, (r0)",
-            Mnemonic::from(InstructionR {
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::ST,
                 dst: Register::R0,
                 src: Register::R1,
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "ADD r0, r1",
-            Mnemonic::from(InstructionR {
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::ADD,
                 dst: Register::R0,
                 src: Register::R1,
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "ADDI r0, #1",
-            Mnemonic::from(InstructionI {
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: 1.into(),
-            })
+            }))
         );
 
-        test_mnemonic!(
+        test_item!(
             "ADDI r0, #-1",
-            Mnemonic::from(InstructionI {
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: (-1).into(),
-            })
+            }))
         );
     }
 
     #[test]
     fn label() {
-        test_mnemonic!(":label", Mnemonic::Label("label".to_string()));
-        test_mnemonic!(":label0", Mnemonic::Label("label0".to_string()));
-        test_mnemonic!(":end", Mnemonic::Label("end".to_string()));
+        test_item!(":label", Item::Label("label".to_string()));
+        test_item!(":label0", Item::Label("label0".to_string()));
+        test_item!(":end", Item::Label("end".to_string()));
     }
 
     #[test]
@@ -132,35 +132,35 @@ ADDI r0, #1
 :end
 ";
         let expected1 = vec![
-            Mnemonic::Label("start".to_string()),
-            Mnemonic::from(InstructionR {
+            Item::Label("start".to_string()),
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::LD,
                 dst: Register::R1,
                 src: Register::R0,
-            }),
-            Mnemonic::Label("jump1".to_string()),
-            Mnemonic::from(InstructionI {
+            })),
+            Item::Label("jump1".to_string()),
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::LDI,
                 dst: Register::R1,
                 immediate: 1.into(),
-            }),
-            Mnemonic::Label("jump2".to_string()),
-            Mnemonic::from(InstructionR {
+            })),
+            Item::Label("jump2".to_string()),
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::ST,
                 dst: Register::R0,
                 src: Register::R1,
-            }),
-            Mnemonic::from(InstructionR {
+            })),
+            Item::Mnemonic(Mnemonic::from(InstructionR {
                 funct: Funct::ADD,
                 dst: Register::R0,
                 src: Register::R1,
-            }),
-            Mnemonic::from(InstructionI {
+            })),
+            Item::Mnemonic(Mnemonic::from(InstructionI {
                 opcode: Opcode::ADDI,
                 dst: Register::R0,
                 immediate: 1.into(),
-            }),
-            Mnemonic::Label("end".to_string()),
+            })),
+            Item::Label("end".to_string()),
         ];
         test_file!(input1, expected1);
     }

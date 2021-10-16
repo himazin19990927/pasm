@@ -1,5 +1,20 @@
 use crate::{code::*, mnemonic::*};
 
+pub fn convert<I>(input: I) -> Vec<Mnemonic>
+where
+    I: IntoIterator<Item = Item>,
+{
+    let mut result = Vec::new();
+    for line in input {
+        match line {
+            Item::Label(_) => todo!(),
+            Item::Mnemonic(m) => result.push(m),
+        }
+    }
+
+    return result;
+}
+
 pub fn assemble<I>(input: I) -> Vec<Code>
 where
     I: IntoIterator<Item = Mnemonic>,
@@ -15,7 +30,6 @@ where
 
 pub fn encode(line: Mnemonic) -> Code {
     let code = match &line {
-        Mnemonic::Label(_) => todo!(),
         Mnemonic::I(instr) => {
             let c = instr.opcode.id();
             let d = instr.dst.id();
