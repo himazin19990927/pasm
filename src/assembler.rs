@@ -55,42 +55,22 @@ pub mod tests {
     #[test]
     fn encode_i() {
         // LDI r1, #1
-        let ldi: Mnemonic = InstructionI {
-            opcode: Opcode::LDI,
-            dst: Register::R1,
-            immediate: 1.into(),
-        }
-        .into();
+        let ldi = Mnemonic::instr_i(Opcode::LDI, Register::R1, 1);
         let ldi_code = Code::new(0b01000_001_00000001, ldi.clone());
         assert_eq!(ldi_code, encode(ldi));
 
         // LDI r1, #-1
-        let ldi: Mnemonic = InstructionI {
-            opcode: Opcode::LDI,
-            dst: Register::R1,
-            immediate: (-1).into(),
-        }
-        .into();
+        let ldi = Mnemonic::instr_i(Opcode::LDI, Register::R1, -1);
         let ldi_code = Code::new(0b01000_001_11111111, ldi.clone());
         assert_eq!(ldi_code, encode(ldi));
 
         // ADDI r0, #120
-        let addi: Mnemonic = InstructionI {
-            opcode: Opcode::ADDI,
-            dst: Register::R0,
-            immediate: 120.into(),
-        }
-        .into();
+        let addi = Mnemonic::instr_i(Opcode::ADDI, Register::R0, 120);
         let addi_code = Code::new(0b01100_000_01111000, addi.clone());
         assert_eq!(addi_code, encode(addi));
 
         // ADDI r0, #-120
-        let addi: Mnemonic = InstructionI {
-            opcode: Opcode::ADDI,
-            dst: Register::R0,
-            immediate: (-120).into(),
-        }
-        .into();
+        let addi = Mnemonic::instr_i(Opcode::ADDI, Register::R0, -120);
         let addi_code = Code::new(0b01100_000_10001000, addi.clone());
         assert_eq!(addi_code, encode(addi));
     }
@@ -98,33 +78,17 @@ pub mod tests {
     #[test]
     fn encode_r() {
         // LD r1, (r0)
-        let ld: Mnemonic = InstructionR {
-            funct: Funct::LD,
-            dst: Register::R1,
-            src: Register::R0,
-        }
-        .into();
-
+        let ld = Mnemonic::instr_r(Funct::LD, Register::R1, Register::R0);
         let ld_code = Code::new(0b00000_001_000_01001, ld.clone());
         assert_eq!(ld_code, encode(ld));
 
         // ST r1, (r0)
-        let st: Mnemonic = InstructionR {
-            funct: Funct::ST,
-            dst: Register::R0,
-            src: Register::R1,
-        }
-        .into();
+        let st = Mnemonic::instr_r(Funct::ST, Register::R0, Register::R1);
         let st_code = Code::new(0b00000_000_001_01000, st.clone());
         assert_eq!(st_code, encode(st));
 
         // ADD r0, r1
-        let add: Mnemonic = InstructionR {
-            funct: Funct::ADD,
-            dst: Register::R0,
-            src: Register::R1,
-        }
-        .into();
+        let add = Mnemonic::instr_r(Funct::ADD, Register::R0, Register::R1);
         let add_code = Code::new(0b00000_000_001_00110, add.clone());
         assert_eq!(add_code, encode(add));
     }

@@ -50,65 +50,22 @@ mod tests {
     fn instruction() {
         test_item!(
             "LD r1, (r0)",
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::LD,
-                dst: Register::R1,
-                src: Register::R0,
-            }))
+            Item::instr_r(Funct::LD, Register::R1, Register::R0)
         );
-
-        test_item!(
-            "LDI r1, #1",
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::LDI,
-                dst: Register::R1,
-                immediate: 1.into(),
-            }))
-        );
-
-        test_item!(
-            "LDI r1, #-1",
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::LDI,
-                dst: Register::R1,
-                immediate: (-1).into(),
-            }))
-        );
-
+        test_item!("LDI r1, #1", Item::instr_i(Opcode::LDI, Register::R1, 1));
+        test_item!("LDI r1, #-1", Item::instr_i(Opcode::LDI, Register::R1, -1));
         test_item!(
             "ST r1, (r0)",
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::ST,
-                dst: Register::R0,
-                src: Register::R1,
-            }))
+            Item::instr_r(Funct::ST, Register::R0, Register::R1)
         );
-
         test_item!(
             "ADD r0, r1",
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::ADD,
-                dst: Register::R0,
-                src: Register::R1,
-            }))
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1)
         );
-
-        test_item!(
-            "ADDI r0, #1",
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::ADDI,
-                dst: Register::R0,
-                immediate: 1.into(),
-            }))
-        );
-
+        test_item!("ADDI r0, #1", Item::instr_i(Opcode::ADDI, Register::R0, 1));
         test_item!(
             "ADDI r0, #-1",
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::ADDI,
-                dst: Register::R0,
-                immediate: (-1).into(),
-            }))
+            Item::instr_i(Opcode::ADDI, Register::R0, -1)
         );
     }
 
@@ -132,35 +89,15 @@ ADDI r0, #1
 :end
 ";
         let expected1 = vec![
-            Item::Label("start".to_string()),
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::LD,
-                dst: Register::R1,
-                src: Register::R0,
-            })),
-            Item::Label("jump1".to_string()),
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::LDI,
-                dst: Register::R1,
-                immediate: 1.into(),
-            })),
-            Item::Label("jump2".to_string()),
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::ST,
-                dst: Register::R0,
-                src: Register::R1,
-            })),
-            Item::Mnemonic(Mnemonic::from(InstructionR {
-                funct: Funct::ADD,
-                dst: Register::R0,
-                src: Register::R1,
-            })),
-            Item::Mnemonic(Mnemonic::from(InstructionI {
-                opcode: Opcode::ADDI,
-                dst: Register::R0,
-                immediate: 1.into(),
-            })),
-            Item::Label("end".to_string()),
+            Item::label("start".to_string()),
+            Item::instr_r(Funct::LD, Register::R1, Register::R0),
+            Item::label("jump1".to_string()),
+            Item::instr_i(Opcode::LDI, Register::R1, 1.into()),
+            Item::label("jump2".to_string()),
+            Item::instr_r(Funct::ST, Register::R0, Register::R1),
+            Item::instr_r(Funct::ADD, Register::R0, Register::R1),
+            Item::instr_i(Opcode::ADDI, Register::R0, 1.into()),
+            Item::label("end".to_string()),
         ];
         test_file!(input1, expected1);
     }

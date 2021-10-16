@@ -16,10 +16,38 @@ impl Display for Item {
     }
 }
 
+impl Item {
+    pub fn label(label: String) -> Self {
+        Self::Label(label)
+    }
+
+    pub fn instr_i(opcode: Opcode, dst: Register, immediate: i8) -> Self {
+        Self::Mnemonic(Mnemonic::instr_i(opcode, dst, immediate))
+    }
+
+    pub fn instr_r(funct: Funct, dst: Register, src: Register) -> Self {
+        Self::Mnemonic(Mnemonic::instr_r(funct, dst, src))
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Mnemonic {
     I(InstructionI),
     R(InstructionR),
+}
+
+impl Mnemonic {
+    pub fn instr_i(opcode: Opcode, dst: Register, immediate: i8) -> Self {
+        Mnemonic::I(InstructionI {
+            opcode,
+            dst,
+            immediate,
+        })
+    }
+
+    pub fn instr_r(funct: Funct, dst: Register, src: Register) -> Self {
+        Mnemonic::R(InstructionR { funct, dst, src })
+    }
 }
 
 impl Display for Mnemonic {
@@ -28,18 +56,6 @@ impl Display for Mnemonic {
             Mnemonic::I(i) => write!(f, "{}", i),
             Mnemonic::R(i) => write!(f, "{}", i),
         }
-    }
-}
-
-impl From<InstructionI> for Mnemonic {
-    fn from(i: InstructionI) -> Self {
-        Mnemonic::I(i)
-    }
-}
-
-impl From<InstructionR> for Mnemonic {
-    fn from(i: InstructionR) -> Self {
-        Mnemonic::R(i)
     }
 }
 
