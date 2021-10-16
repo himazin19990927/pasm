@@ -21,6 +21,9 @@ pub enum Token {
     /// The `ADDI` token.
     ADDI,
 
+    /// The `JMP` token.
+    JMP,
+
     /// The `R0` token.
     R0,
 

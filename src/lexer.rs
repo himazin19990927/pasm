@@ -107,6 +107,7 @@ impl<'input> Lexer<'input> {
                         "ST" => Token::ST,
                         "ADD" => Token::ADD,
                         "ADDI" => Token::ADDI,
+                        "JMP" => Token::JMP,
 
                         "r0" => Token::R0,
                         "r1" => Token::R1,
@@ -215,6 +216,7 @@ mod tests {
         test_lexer!("ST", vec![Token::ST]);
         test_lexer!("ADD", vec![Token::ADD]);
         test_lexer!("ADDI", vec![Token::ADDI]);
+        test_lexer!("JMP", vec![Token::JMP]);
     }
 
     #[test]
