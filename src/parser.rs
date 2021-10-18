@@ -104,12 +104,17 @@ mod tests {
         // todo: Cannot parse -128.
         // test_item!("LDI r0, #-128", Item::instr_i(OpcodeI::LDI, Register::R0, -128));
 
-        test_item!("LDI r0, #-127", Item::instr_i(OpcodeI::LDI, Register::R0, -127));
+        test_item!(
+            "LDI r0, #-127",
+            Item::instr_i(OpcodeI::LDI, Register::R0, -127)
+        );
         test_item!("LDI r0, #-1", Item::instr_i(OpcodeI::LDI, Register::R0, -1));
         test_item!("LDI r0, #0", Item::instr_i(OpcodeI::LDI, Register::R0, 0));
         test_item!("LDI r0, #1", Item::instr_i(OpcodeI::LDI, Register::R0, 1));
-        test_item!("LDI r0, #127", Item::instr_i(OpcodeI::LDI, Register::R0, 127));
-
+        test_item!(
+            "LDI r0, #127",
+            Item::instr_i(OpcodeI::LDI, Register::R0, 127)
+        );
 
         test_item!("LDI r0, #0", Item::instr_i(OpcodeI::LDI, Register::R0, 0));
         test_item!("LDIU r0, #0", Item::instr_i(OpcodeI::LDIU, Register::R0, 0));
@@ -131,6 +136,21 @@ mod tests {
         test_item!(
             "BEZ r0, label",
             Item::instr_b(OpcodeB::BEZ, Register::R0, "label".into())
+        );
+
+        test_item!(
+            "BNZ r0, label",
+            Item::instr_b(OpcodeB::BNZ, Register::R0, "label".into())
+        );
+
+        test_item!(
+            "BPL r0, label",
+            Item::instr_b(OpcodeB::BPL, Register::R0, "label".into())
+        );
+
+        test_item!(
+            "BMI r0, label",
+            Item::instr_b(OpcodeB::BMI, Register::R0, "label".into())
         );
     }
 

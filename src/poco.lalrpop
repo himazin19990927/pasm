@@ -15,8 +15,8 @@ pub Item: Item = {
 Mnemonic: Mnemonic = {
     <InstructionR>,
     <InstructionI>,
+    <InstructionB>,
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
-    "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
     "JR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JR, dst),
 };
 
@@ -39,6 +39,13 @@ InstructionI: Mnemonic = {
     "ADDI" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDI, dst, imm),
     "ADDIU" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDIU, dst, imm),
     "LDHI" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::LDHI, dst, imm),
+}
+
+InstructionB: Mnemonic = {
+    "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
+    "BNZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BNZ, src, label),
+    "BPL" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BPL, src, label),
+    "BMI" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BMI, src, label),
 }
 
 pub Register: Register = {
@@ -86,8 +93,12 @@ extern {
         "ADDIU" => Token::ADDIU,
         "LDHI" => Token::LDHI,
 
-        "JMP" => Token::JMP,
         "BEZ" => Token::BEZ,
+        "BNZ" => Token::BNZ,
+        "BPL" => Token::BPL,
+        "BMI" => Token::BMI,
+
+        "JMP" => Token::JMP,
         "JR" => Token::JR,
 
         "R0" => Token::R0,

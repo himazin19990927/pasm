@@ -216,12 +216,18 @@ impl Display for InstructionB {
 #[derive(Debug, PartialEq, Clone)]
 pub enum OpcodeB {
     BEZ,
+    BNZ,
+    BPL,
+    BMI,
 }
 
 impl OpcodeB {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeB::BEZ => 0b10000,
+            OpcodeB::BNZ => todo!(),
+            OpcodeB::BPL => todo!(),
+            OpcodeB::BMI => todo!(),
         }
     }
 }
@@ -230,6 +236,9 @@ impl Display for OpcodeB {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeB::BEZ => write!(f, "BEZ"),
+            OpcodeB::BNZ => todo!(),
+            OpcodeB::BPL => todo!(),
+            OpcodeB::BMI => todo!(),
         }
     }
 }
