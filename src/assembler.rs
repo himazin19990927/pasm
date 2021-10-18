@@ -191,25 +191,141 @@ pub mod tests {
     fn encode_i() {
         let table = &HashMap::new();
 
-        // LDI r1, #1
-        let ldi = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 1);
-        let ldi_code = Code::new(0b01000_001_00000001, ldi.clone());
-        assert_eq!(ldi_code, encode(ldi, table, 0));
+        {
+            // LDI r1, #2
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 2);
+            let c = Code::new(0b01000_001_00000010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
 
-        // LDI r1, #-1
-        let ldi = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, -1);
-        let ldi_code = Code::new(0b01000_001_11111111, ldi.clone());
-        assert_eq!(ldi_code, encode(ldi, table, 0));
+        {
+            // LDIU r1, #2
+            let m = Mnemonic::instr_i(OpcodeI::LDIU, Register::R1, 2);
+            let c = Code::new(0b01001_001_00000010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
 
-        // ADDI r0, #120
-        let addi = Mnemonic::instr_i(OpcodeI::ADDI, Register::R0, 120);
-        let addi_code = Code::new(0b01100_000_01111000, addi.clone());
-        assert_eq!(addi_code, encode(addi, table, 0));
+        {
+            // ADDI r1, #2
+            let m = Mnemonic::instr_i(OpcodeI::ADDI, Register::R1, 2);
+            let c = Code::new(0b01100_001_00000010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
 
-        // ADDI r0, #-120
-        let addi = Mnemonic::instr_i(OpcodeI::ADDI, Register::R0, -120);
-        let addi_code = Code::new(0b01100_000_10001000, addi.clone());
-        assert_eq!(addi_code, encode(addi, table, 0));
+        {
+            // ADDIU r1, #2
+            let m = Mnemonic::instr_i(OpcodeI::ADDIU, Register::R1, 2);
+            let c = Code::new(0b01101_001_00000010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDHI r1, #2
+            let m = Mnemonic::instr_i(OpcodeI::LDHI, Register::R1, 2);
+            let c = Code::new(0b01010_001_00000010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+    }
+
+    #[test]
+    fn encode_i_immediate() {
+        let table = &HashMap::new();
+
+        {
+            // LDI r1, #-127
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, -127);
+            let c = Code::new(0b01000_001_10000001, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r1, #-1
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, -1);
+            let c = Code::new(0b01000_001_11111111, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r1, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 0);
+            let c = Code::new(0b01000_001_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r1, #1
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 1);
+            let c = Code::new(0b01000_001_00000001, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r1, #127
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 127);
+            let c = Code::new(0b01000_001_01111111, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+    }
+
+    #[test]
+    fn encode_i_register() {
+        let table = &HashMap::new();
+
+        {
+            // LDI r0, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R0, 0);
+            let c = Code::new(0b01000_000_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r1, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R1, 0);
+            let c = Code::new(0b01000_001_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r2, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R2, 0);
+            let c = Code::new(0b01000_010_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r3, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R3, 0);
+            let c = Code::new(0b01000_011_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r4, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R4, 0);
+            let c = Code::new(0b01000_100_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r5, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R5, 0);
+            let c = Code::new(0b01000_101_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r6, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R6, 0);
+            let c = Code::new(0b01000_110_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LDI r7, #0
+            let m = Mnemonic::instr_i(OpcodeI::LDI, Register::R7, 0);
+            let c = Code::new(0b01000_111_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
     }
 
     #[test]

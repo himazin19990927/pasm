@@ -180,10 +180,10 @@ impl OpcodeI {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeI::LDI => 0b01000,
-            OpcodeI::LDIU => todo!(),
+            OpcodeI::LDIU => 0b01001,
             OpcodeI::ADDI => 0b01100,
-            OpcodeI::ADDIU => todo!(),
-            OpcodeI::LDHI => todo!(),
+            OpcodeI::ADDIU => 0b01101,
+            OpcodeI::LDHI => 0b01010,
         }
     }
 }
