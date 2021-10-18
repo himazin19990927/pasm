@@ -13,11 +13,11 @@ pub Item: Item = {
 }
 
 Mnemonic: Mnemonic = {
-    "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::instr_r(Funct::LD, dst, src),
-    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Mnemonic::instr_i(Opcode::LDI, dst, imm),
-    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(Funct::ST, dst, src),
-    "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(Funct::ADD, dst, src),
-    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(Opcode::ADDI, dst, imm),
+    "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::instr_r(FunctR::LD, dst, src),
+    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Mnemonic::instr_i(OpcodeI::LDI, dst, imm),
+    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(FunctR::ST, dst, src),
+    "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::ADD, dst, src),
+    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDI, dst, imm),
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
     "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
 };

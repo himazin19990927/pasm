@@ -50,22 +50,22 @@ mod tests {
     fn instruction() {
         test_item!(
             "LD r1, (r0)",
-            Item::instr_r(Funct::LD, Register::R1, Register::R0)
+            Item::instr_r(FunctR::LD, Register::R1, Register::R0)
         );
-        test_item!("LDI r1, #1", Item::instr_i(Opcode::LDI, Register::R1, 1));
-        test_item!("LDI r1, #-1", Item::instr_i(Opcode::LDI, Register::R1, -1));
+        test_item!("LDI r1, #1", Item::instr_i(OpcodeI::LDI, Register::R1, 1));
+        test_item!("LDI r1, #-1", Item::instr_i(OpcodeI::LDI, Register::R1, -1));
         test_item!(
             "ST r1, (r0)",
-            Item::instr_r(Funct::ST, Register::R0, Register::R1)
+            Item::instr_r(FunctR::ST, Register::R0, Register::R1)
         );
         test_item!(
             "ADD r0, r1",
-            Item::instr_r(Funct::ADD, Register::R0, Register::R1)
+            Item::instr_r(FunctR::ADD, Register::R0, Register::R1)
         );
-        test_item!("ADDI r0, #1", Item::instr_i(Opcode::ADDI, Register::R0, 1));
+        test_item!("ADDI r0, #1", Item::instr_i(OpcodeI::ADDI, Register::R0, 1));
         test_item!(
             "ADDI r0, #-1",
-            Item::instr_i(Opcode::ADDI, Register::R0, -1)
+            Item::instr_i(OpcodeI::ADDI, Register::R0, -1)
         );
     }
 
@@ -105,14 +105,14 @@ JMP end
 ";
         let expected1 = vec![
             Item::label("start".to_string()),
-            Item::instr_r(Funct::LD, Register::R1, Register::R0),
+            Item::instr_r(FunctR::LD, Register::R1, Register::R0),
             Item::instr_b(OpcodeB::BEZ, Register::R0, "jump1".into()),
             Item::label("jump1".to_string()),
-            Item::instr_i(Opcode::LDI, Register::R1, 1.into()),
+            Item::instr_i(OpcodeI::LDI, Register::R1, 1.into()),
             Item::label("jump2".to_string()),
-            Item::instr_r(Funct::ST, Register::R0, Register::R1),
-            Item::instr_r(Funct::ADD, Register::R0, Register::R1),
-            Item::instr_i(Opcode::ADDI, Register::R0, 1.into()),
+            Item::instr_r(FunctR::ST, Register::R0, Register::R1),
+            Item::instr_r(FunctR::ADD, Register::R0, Register::R1),
+            Item::instr_i(OpcodeI::ADDI, Register::R0, 1.into()),
             Item::instr_j(OpcodeJ::JMP, "end".into()),
             Item::label("end".to_string()),
         ];

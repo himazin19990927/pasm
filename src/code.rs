@@ -21,21 +21,21 @@ impl Code {
     pub fn get_line(&self, underscore: bool, mnemonic: bool) -> String {
         let code = if underscore {
             match self.instruction {
-                Mnemonic::I(_) => {
-                    let (c, d, x) = self.split_as_i_instr();
-                    format!("{:05b}_{:03b}_{:08b}", c, d, x)
-                }
                 Mnemonic::R(_) => {
                     let (d, s, f) = self.split_as_r_instr();
                     format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, s, f)
                 }
-                Mnemonic::J(_) => {
-                    let (c, x) = self.split_as_j_instr();
-                    format!("{:05b}_{:011b}", c, x)
+                Mnemonic::I(_) => {
+                    let (c, d, x) = self.split_as_i_instr();
+                    format!("{:05b}_{:03b}_{:08b}", c, d, x)
                 }
                 Mnemonic::B(_) => {
                     let (c, s, x) = self.split_as_i_instr();
                     format!("{:05b}_{:03b}_{:08b}", c, s, x)
+                }
+                Mnemonic::J(_) => {
+                    let (c, x) = self.split_as_j_instr();
+                    format!("{:05b}_{:011b}", c, x)
                 }
             }
         } else {
