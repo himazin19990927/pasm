@@ -123,14 +123,14 @@ pub enum FunctR {
 impl FunctR {
     pub fn id(&self) -> u16 {
         match &self {
-            FunctR::NOP => todo!(),
-            FunctR::MV => todo!(),
-            FunctR::AND => todo!(),
-            FunctR::OR => todo!(),
-            FunctR::SL => todo!(),
-            FunctR::SR => todo!(),
+            FunctR::NOP => 0b00000,
+            FunctR::MV => 0b00001,
+            FunctR::AND => 0b00010,
+            FunctR::OR => 0b00011,
+            FunctR::SL => 0b00100,
+            FunctR::SR => 0b00101,
             FunctR::ADD => 0b00110,
-            FunctR::SUB => todo!(),
+            FunctR::SUB => 0b00111,
             FunctR::ST => 0b01000,
             FunctR::LD => 0b01001,
         }

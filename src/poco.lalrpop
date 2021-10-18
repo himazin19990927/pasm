@@ -29,7 +29,7 @@ InstructionR: Mnemonic = {
     "SR" <dst: Register> => Mnemonic::instr_r(FunctR::SR, dst, Register::R0),
     "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::ADD, dst, src),
     "SUB" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::SUB, dst, src),
-    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(FunctR::ST, dst, src),
+    "ST" <src: Register> "," <addr: Parenthesized> => Mnemonic::instr_r(FunctR::ST, src, addr),
     "LD" <dst: Register> "," <src: Parenthesized> => Mnemonic::instr_r(FunctR::LD, dst, src),
 }
 

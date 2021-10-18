@@ -113,6 +113,81 @@ pub mod tests {
     }
 
     #[test]
+    fn encode_r() {
+        let table = &HashMap::new();
+
+        {
+            // NOP
+            let m = Mnemonic::instr_r(FunctR::NOP, Register::R0, Register::R0);
+            let c = Code::new(0b00000_000_000_00000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // MV r0, r1
+            let m = Mnemonic::instr_r(FunctR::MV, Register::R0, Register::R1);
+            let c = Code::new(0b00000_000_001_00001, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // AND r0, r1
+            let m = Mnemonic::instr_r(FunctR::AND, Register::R0, Register::R1);
+            let c = Code::new(0b00000_000_001_00010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // OR r0, r1
+            let m = Mnemonic::instr_r(FunctR::OR, Register::R0, Register::R1);
+            let c = Code::new(0b00000_000_001_00011, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // SL r0
+            let m = Mnemonic::instr_r(FunctR::SL, Register::R1, Register::R0);
+            let c = Code::new(0b00000_001_000_00100, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // SR r0
+            let m = Mnemonic::instr_r(FunctR::SR, Register::R1, Register::R0);
+            let c = Code::new(0b00000_001_000_00101, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // ADD r0, r1
+            let m = Mnemonic::instr_r(FunctR::ADD, Register::R0, Register::R1);
+            let c = Code::new(0b00000_000_001_00110, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // SUB r0, r1
+            let m = Mnemonic::instr_r(FunctR::SUB, Register::R0, Register::R1);
+            let c = Code::new(0b00000_000_001_00111, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // ST r1, (r2)
+            let m = Mnemonic::instr_r(FunctR::ST, Register::R1, Register::R2);
+            let c = Code::new(0b00000_001_010_01000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // LD r1, (r2)
+            let m = Mnemonic::instr_r(FunctR::LD, Register::R1, Register::R2);
+            let c = Code::new(0b00000_001_010_01001, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+    }
+
+    #[test]
     fn encode_i() {
         let table = &HashMap::new();
 
@@ -135,26 +210,6 @@ pub mod tests {
         let addi = Mnemonic::instr_i(OpcodeI::ADDI, Register::R0, -120);
         let addi_code = Code::new(0b01100_000_10001000, addi.clone());
         assert_eq!(addi_code, encode(addi, table, 0));
-    }
-
-    #[test]
-    fn encode_r() {
-        let table = &HashMap::new();
-
-        // LD r1, (r0)
-        let ld = Mnemonic::instr_r(FunctR::LD, Register::R1, Register::R0);
-        let ld_code = Code::new(0b00000_001_000_01001, ld.clone());
-        assert_eq!(ld_code, encode(ld, table, 0));
-
-        // ST r1, (r0)
-        let st = Mnemonic::instr_r(FunctR::ST, Register::R0, Register::R1);
-        let st_code = Code::new(0b00000_000_001_01000, st.clone());
-        assert_eq!(st_code, encode(st, table, 0));
-
-        // ADD r0, r1
-        let add = Mnemonic::instr_r(FunctR::ADD, Register::R0, Register::R1);
-        let add_code = Code::new(0b00000_000_001_00110, add.clone());
-        assert_eq!(add_code, encode(add, table, 0));
     }
 
     #[test]

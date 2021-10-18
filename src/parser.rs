@@ -30,7 +30,9 @@ mod tests {
             let lexer = Lexer::new($input);
             let result = poco::FileParser::new().parse(lexer).unwrap();
 
-            assert_eq!($expected, result);
+            for (index, (left, right)) in $expected.iter().zip(result.iter()).enumerate() {
+                assert_eq!((index, left), (index, right));
+            }
         };
     }
 
@@ -90,7 +92,7 @@ mod tests {
 
         test_item!(
             "ST r0, (r1)",
-            Item::instr_r(FunctR::ST, Register::R1, Register::R0)
+            Item::instr_r(FunctR::ST, Register::R0, Register::R1)
         );
 
         test_item!(
@@ -172,11 +174,11 @@ mod tests {
     fn file() {
         let input1 = r"
 :start
-LD r1, (r0)
+LD r1, (r2)
 BEZ r0, jump1
 :jump1
 LDI r1, #1
-:jump2 ST r1, (r0)
+:jump2 ST r1, (r2)
 ADD r0, r1
 ADDI r0, #1
 JMP end
@@ -184,12 +186,12 @@ JMP end
 ";
         let expected1 = vec![
             Item::label("start".to_string()),
-            Item::instr_r(FunctR::LD, Register::R1, Register::R0),
+            Item::instr_r(FunctR::LD, Register::R1, Register::R2),
             Item::instr_b(OpcodeB::BEZ, Register::R0, "jump1".into()),
             Item::label("jump1".to_string()),
             Item::instr_i(OpcodeI::LDI, Register::R1, 1.into()),
             Item::label("jump2".to_string()),
-            Item::instr_r(FunctR::ST, Register::R0, Register::R1),
+            Item::instr_r(FunctR::ST, Register::R1, Register::R2),
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1),
             Item::instr_i(OpcodeI::ADDI, Register::R0, 1.into()),
             Item::instr_j(OpcodeJ::JMP, "end".into()),
