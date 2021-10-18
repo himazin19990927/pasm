@@ -13,15 +13,26 @@ pub Item: Item = {
 }
 
 Mnemonic: Mnemonic = {
-    "LD" <dst: Register> ","  <src: Parenthesized> => Mnemonic::instr_r(FunctR::LD, dst, src),
+    <InstructionR>,
     "LDI" <dst: Register> "," "#" <imm:Immediate>  => Mnemonic::instr_i(OpcodeI::LDI, dst, imm),
-    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(FunctR::ST, dst, src),
-    "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::ADD, dst, src),
     "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDI, dst, imm),
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
     "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
     "JR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JR, dst),
 };
+
+InstructionR: Mnemonic = {
+    "NOP" => Mnemonic::instr_r(FunctR::NOP, Register::R0, Register::R0),
+    "MV" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::MV, dst, src),
+    "AND" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::AND, dst, src),
+    "OR" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::OR, dst, src),
+    "SL" <dst: Register> => Mnemonic::instr_r(FunctR::SL, dst, Register::R0),
+    "SR" <dst: Register> => Mnemonic::instr_r(FunctR::SR, dst, Register::R0),
+    "ADD" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::ADD, dst, src),
+    "SUB" <dst: Register> "," <src: Register> => Mnemonic::instr_r(FunctR::SUB, dst, src),
+    "ST" <src: Register> "," <dst: Parenthesized> => Mnemonic::instr_r(FunctR::ST, dst, src),
+    "LD" <dst: Register> "," <src: Parenthesized> => Mnemonic::instr_r(FunctR::LD, dst, src),
+}
 
 pub Register: Register = {
     "R0" => Register::R0,
@@ -51,10 +62,18 @@ extern {
         "Num" => Token::Num(<String>),
         "Ident" => Token::Ident(<String>),
 
-        "LD" => Token::LD,
-        "LDI" => Token::LDI,
-        "ST" => Token::ST,
+        "NOP" => Token::NOP,
+        "MV" => Token::MV,
+        "AND" => Token::AND,
+        "OR" => Token::OR,
+        "SL" => Token::SL,
+        "SR" => Token::SR,
         "ADD" => Token::ADD,
+        "SUB" => Token::SUB,
+        "ST" => Token::ST,
+        "LD" => Token::LD,
+
+        "LDI" => Token::LDI,
         "ADDI" => Token::ADDI,
         "JMP" => Token::JMP,
         "BEZ" => Token::BEZ,

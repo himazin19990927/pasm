@@ -47,21 +47,62 @@ mod tests {
     }
 
     #[test]
-    fn instruction() {
+    fn instruction_r() {
         test_item!(
-            "LD r1, (r0)",
-            Item::instr_r(FunctR::LD, Register::R1, Register::R0)
+            "NOP",
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0)
         );
-        test_item!("LDI r1, #1", Item::instr_i(OpcodeI::LDI, Register::R1, 1));
-        test_item!("LDI r1, #-1", Item::instr_i(OpcodeI::LDI, Register::R1, -1));
+
         test_item!(
-            "ST r1, (r0)",
-            Item::instr_r(FunctR::ST, Register::R0, Register::R1)
+            "MV r0, r1",
+            Item::instr_r(FunctR::MV, Register::R0, Register::R1)
         );
+
+        test_item!(
+            "AND r0, r1",
+            Item::instr_r(FunctR::AND, Register::R0, Register::R1)
+        );
+
+        test_item!(
+            "OR r0, r1",
+            Item::instr_r(FunctR::OR, Register::R0, Register::R1)
+        );
+
+        test_item!(
+            "SL r1",
+            Item::instr_r(FunctR::SL, Register::R1, Register::R0)
+        );
+
+        test_item!(
+            "SR r1",
+            Item::instr_r(FunctR::SR, Register::R1, Register::R0)
+        );
+
         test_item!(
             "ADD r0, r1",
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1)
         );
+
+        test_item!(
+            "SUB r0, r1",
+            Item::instr_r(FunctR::SUB, Register::R0, Register::R1)
+        );
+
+        test_item!(
+            "ST r0, (r1)",
+            Item::instr_r(FunctR::ST, Register::R1, Register::R0)
+        );
+
+        test_item!(
+            "LD r0, (r1)",
+            Item::instr_r(FunctR::LD, Register::R0, Register::R1)
+        );
+    }
+
+    #[test]
+    fn instruction() {
+        test_item!("LDI r1, #1", Item::instr_i(OpcodeI::LDI, Register::R1, 1));
+        test_item!("LDI r1, #-1", Item::instr_i(OpcodeI::LDI, Register::R1, -1));
         test_item!("ADDI r0, #1", Item::instr_i(OpcodeI::ADDI, Register::R0, 1));
         test_item!(
             "ADDI r0, #-1",

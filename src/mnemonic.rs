@@ -108,17 +108,31 @@ impl Display for InstructionR {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum FunctR {
-    LD,
-    ST,
+    NOP,
+    MV,
+    AND,
+    OR,
+    SL,
+    SR,
     ADD,
+    SUB,
+    ST,
+    LD,
 }
 
 impl FunctR {
     pub fn id(&self) -> u16 {
         match &self {
-            FunctR::LD => 0b01001,
-            FunctR::ST => 0b01000,
+            FunctR::NOP => todo!(),
+            FunctR::MV => todo!(),
+            FunctR::AND => todo!(),
+            FunctR::OR => todo!(),
+            FunctR::SL => todo!(),
+            FunctR::SR => todo!(),
             FunctR::ADD => 0b00110,
+            FunctR::SUB => todo!(),
+            FunctR::ST => 0b01000,
+            FunctR::LD => 0b01001,
         }
     }
 }
@@ -126,9 +140,16 @@ impl FunctR {
 impl Display for FunctR {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            FunctR::LD => write!(f, "LD"),
-            FunctR::ST => write!(f, "ST"),
+            FunctR::NOP => todo!(),
+            FunctR::MV => todo!(),
+            FunctR::AND => todo!(),
+            FunctR::OR => todo!(),
+            FunctR::SL => todo!(),
+            FunctR::SR => todo!(),
             FunctR::ADD => write!(f, "ADD"),
+            FunctR::SUB => todo!(),
+            FunctR::ST => write!(f, "ST"),
+            FunctR::LD => write!(f, "LD"),
         }
     }
 }
