@@ -69,6 +69,7 @@ pub fn encode(line: Mnemonic, table: &HashMap<String, i16>, current_addr: i16) -
 
             (c << 11) | addr as u16 & 0b00000_11111111111
         }
+        Mnemonic::JR(_) => todo!(),
     };
 
     Code::new(code, line)
@@ -156,19 +157,19 @@ pub mod tests {
     fn encode_j() {
         let items = vec![
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 0
-            Item::instr_j(OpcodeJ::JMP, "label".into()),           // 1
+            Item::instr_j(OpcodeJ::JMP, "label".into()),            // 1
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 2
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 3
-            Item::label("label".into()),                           // :label
+            Item::label("label".into()),                            // :label
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 4
-            Item::label("loop".into()),                            // :loop
+            Item::label("loop".into()),                             // :loop
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 5
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 6
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 7
-            Item::instr_j(OpcodeJ::JMP, "loop".into()),            // 8
+            Item::instr_j(OpcodeJ::JMP, "loop".into()),             // 8
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 9
-            Item::label("end".into()),                             // :end
-            Item::instr_j(OpcodeJ::JMP, "end".into()),             // 10
+            Item::label("end".into()),                              // :end
+            Item::instr_j(OpcodeJ::JMP, "end".into()),              // 10
         ];
 
         let (_, table) = convert(items);
@@ -196,15 +197,15 @@ pub mod tests {
             Item::instr_b(OpcodeB::BEZ, Register::R0, "label".into()), // 1
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 2
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 3
-            Item::label("label".into()),                           // :label
+            Item::label("label".into()),                            // :label
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 4
-            Item::label("loop".into()),                            // :loop
+            Item::label("loop".into()),                             // :loop
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 5
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 6
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 7
             Item::instr_b(OpcodeB::BEZ, Register::R0, "loop".into()), // 8
             Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 9
-            Item::label("end".into()),                             // :end
+            Item::label("end".into()),                              // :end
             Item::instr_b(OpcodeB::BEZ, Register::R0, "ebd".into()), // 10
         ];
 

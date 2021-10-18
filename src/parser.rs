@@ -83,6 +83,11 @@ mod tests {
     }
 
     #[test]
+    fn instruction_jr() {
+        test_item!("JR r0", Item::instr_jr(OpcodeJR::JR, Register::R0));
+    }
+
+    #[test]
     fn label() {
         test_item!(":label", Item::Label("label".to_string()));
         test_item!(":label0", Item::Label("label0".to_string()));
