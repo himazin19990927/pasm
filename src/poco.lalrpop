@@ -17,7 +17,7 @@ Mnemonic: Mnemonic = {
     <InstructionI>,
     <InstructionB>,
     <InstructionJ>,
-    "JR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JR, dst),
+    <InstructionJR>,
 };
 
 InstructionR: Mnemonic = {
@@ -51,6 +51,11 @@ InstructionB: Mnemonic = {
 InstructionJ: Mnemonic = {
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
     "JAL" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JAL, label),
+}
+
+InstructionJR: Mnemonic = {
+    "JR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JR, dst),
+    "JALR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JALR, dst),
 }
 
 pub Register: Register = {
@@ -107,6 +112,7 @@ extern {
         "JAL" => Token::JAL,
 
         "JR" => Token::JR,
+        "JALR" => Token::JALR,
 
         "R0" => Token::R0,
         "R1" => Token::R1,

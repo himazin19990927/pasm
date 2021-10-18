@@ -294,12 +294,14 @@ impl Display for InstructionJR {
 #[derive(Debug, PartialEq, Clone)]
 pub enum FunctJR {
     JR,
+    JALR,
 }
 
 impl FunctJR {
     pub fn id(&self) -> u16 {
         match &self {
             FunctJR::JR => 0b01010,
+            FunctJR::JALR => todo!(),
         }
     }
 }
@@ -308,6 +310,7 @@ impl Display for FunctJR {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             FunctJR::JR => write!(f, "JR"),
+            FunctJR::JALR => todo!(),
         }
     }
 }
