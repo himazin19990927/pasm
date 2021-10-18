@@ -100,14 +100,25 @@ mod tests {
     }
 
     #[test]
-    fn instruction() {
-        test_item!("LDI r1, #1", Item::instr_i(OpcodeI::LDI, Register::R1, 1));
-        test_item!("LDI r1, #-1", Item::instr_i(OpcodeI::LDI, Register::R1, -1));
-        test_item!("ADDI r0, #1", Item::instr_i(OpcodeI::ADDI, Register::R0, 1));
+    fn instruction_i() {
+        // todo: Cannot parse -128.
+        // test_item!("LDI r0, #-128", Item::instr_i(OpcodeI::LDI, Register::R0, -128));
+
+        test_item!("LDI r0, #-127", Item::instr_i(OpcodeI::LDI, Register::R0, -127));
+        test_item!("LDI r0, #-1", Item::instr_i(OpcodeI::LDI, Register::R0, -1));
+        test_item!("LDI r0, #0", Item::instr_i(OpcodeI::LDI, Register::R0, 0));
+        test_item!("LDI r0, #1", Item::instr_i(OpcodeI::LDI, Register::R0, 1));
+        test_item!("LDI r0, #127", Item::instr_i(OpcodeI::LDI, Register::R0, 127));
+
+
+        test_item!("LDI r0, #0", Item::instr_i(OpcodeI::LDI, Register::R0, 0));
+        test_item!("LDIU r0, #0", Item::instr_i(OpcodeI::LDIU, Register::R0, 0));
+        test_item!("ADDI r0, #0", Item::instr_i(OpcodeI::ADDI, Register::R0, 0));
         test_item!(
-            "ADDI r0, #-1",
-            Item::instr_i(OpcodeI::ADDI, Register::R0, -1)
+            "ADDIU r0, #0",
+            Item::instr_i(OpcodeI::ADDIU, Register::R0, 0)
         );
+        test_item!("LDHI r0, #0", Item::instr_i(OpcodeI::LDHI, Register::R0, 0));
     }
 
     #[test]

@@ -14,8 +14,7 @@ pub Item: Item = {
 
 Mnemonic: Mnemonic = {
     <InstructionR>,
-    "LDI" <dst: Register> "," "#" <imm:Immediate>  => Mnemonic::instr_i(OpcodeI::LDI, dst, imm),
-    "ADDI" <dst: Register> "," "#" <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDI, dst, imm),
+    <InstructionI>,
     "JMP" <label: "Ident"> => Mnemonic::instr_j(OpcodeJ::JMP, label),
     "BEZ" <src: Register> "," <label: "Ident"> => Mnemonic::instr_b(OpcodeB::BEZ, src, label),
     "JR" <dst: Register> => Mnemonic::instr_jr(FunctJR::JR, dst),
@@ -34,6 +33,14 @@ InstructionR: Mnemonic = {
     "LD" <dst: Register> "," <src: Parenthesized> => Mnemonic::instr_r(FunctR::LD, dst, src),
 }
 
+InstructionI: Mnemonic = {
+    "LDI" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::LDI, dst, imm),
+    "LDIU" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::LDIU, dst, imm),
+    "ADDI" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDI, dst, imm),
+    "ADDIU" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::ADDIU, dst, imm),
+    "LDHI" <dst: Register> "," <imm: Immediate> => Mnemonic::instr_i(OpcodeI::LDHI, dst, imm),
+}
+
 pub Register: Register = {
     "R0" => Register::R0,
     "R1" => Register::R1,
@@ -50,8 +57,8 @@ Parenthesized: Register = {
 };
 
 Immediate: i8 = {
-    "-" <imm: "Num"> => -i8::from_str(imm.as_str()).unwrap(),
-    <imm: "Num"> => i8::from_str(imm.as_str()).unwrap(),
+    "#" "-" <imm: "Num"> => -i8::from_str(imm.as_str()).unwrap(),
+    "#" <imm: "Num"> => i8::from_str(imm.as_str()).unwrap(),
 }
 
 extern {
@@ -74,7 +81,11 @@ extern {
         "LD" => Token::LD,
 
         "LDI" => Token::LDI,
+        "LDIU" => Token::LDIU,
         "ADDI" => Token::ADDI,
+        "ADDIU" => Token::ADDIU,
+        "LDHI" => Token::LDHI,
+
         "JMP" => Token::JMP,
         "BEZ" => Token::BEZ,
         "JR" => Token::JR,

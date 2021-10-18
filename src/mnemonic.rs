@@ -170,14 +170,20 @@ impl Display for InstructionI {
 #[derive(Debug, PartialEq, Clone)]
 pub enum OpcodeI {
     LDI,
+    LDIU,
     ADDI,
+    ADDIU,
+    LDHI,
 }
 
 impl OpcodeI {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeI::LDI => 0b01000,
+            OpcodeI::LDIU => todo!(),
             OpcodeI::ADDI => 0b01100,
+            OpcodeI::ADDIU => todo!(),
+            OpcodeI::LDHI => todo!(),
         }
     }
 }
@@ -186,7 +192,10 @@ impl Display for OpcodeI {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeI::LDI => write!(f, "LDI"),
+            OpcodeI::LDIU => todo!(),
             OpcodeI::ADDI => write!(f, "ADDI"),
+            OpcodeI::ADDIU => todo!(),
+            OpcodeI::LDHI => todo!(),
         }
     }
 }
