@@ -37,7 +37,10 @@ impl Code {
                     let (c, x) = self.split_as_j_instr();
                     format!("{:05b}_{:011b}", c, x)
                 }
-                Mnemonic::JR(_) => todo!(),
+                Mnemonic::JR(_) => {
+                    let (d, _, f) = self.split_as_r_instr();
+                    format!("{:05b}_{:03b}_{:03b}_{:05b}", 0, d, 0, f)
+                }
             }
         } else {
             format!("{:016b}", self.code)

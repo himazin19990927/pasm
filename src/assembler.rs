@@ -69,7 +69,11 @@ pub fn encode(line: Mnemonic, table: &HashMap<String, i16>, current_addr: i16) -
 
             (c << 11) | addr as u16 & 0b00000_11111111111
         }
-        Mnemonic::JR(_) => todo!(),
+        Mnemonic::JR(instr) => {
+            let f = instr.opcode.id();
+            let d = instr.dst.id();
+            (d << 8) | f
+        }
     };
 
     Code::new(code, line)
@@ -225,5 +229,15 @@ pub mod tests {
         let bez_end = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "end".into());
         let bez_end_code = Code::new(0b10000_000_00000000, bez_end.clone());
         assert_eq!(bez_end_code, encode(bez_end, &table, 10));
+    }
+
+    #[test]
+    fn encode_jr() {
+        let table = &HashMap::new();
+
+        // JR r0
+        let jr = Mnemonic::instr_jr(OpcodeJR::JR, Register::R0);
+        let jr_code = Code::new(0b00000_000_000_01010, jr.clone());
+        assert_eq!(jr_code, encode(jr, table, 0));
     }
 }
