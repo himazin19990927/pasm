@@ -258,12 +258,14 @@ impl Display for InstructionJ {
 #[derive(Debug, PartialEq, Clone)]
 pub enum OpcodeJ {
     JMP,
+    JAL,
 }
 
 impl OpcodeJ {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeJ::JMP => 0b10100,
+            OpcodeJ::JAL => todo!(),
         }
     }
 }
@@ -272,6 +274,7 @@ impl Display for OpcodeJ {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeJ::JMP => write!(f, "JMP"),
+            &OpcodeJ::JAL => todo!(),
         }
     }
 }

@@ -127,11 +127,6 @@ mod tests {
     }
 
     #[test]
-    fn instruction_j() {
-        test_item!("JMP label", Item::instr_j(OpcodeJ::JMP, "label".into()));
-    }
-
-    #[test]
     fn instruction_b() {
         test_item!(
             "BEZ r0, label",
@@ -152,6 +147,12 @@ mod tests {
             "BMI r0, label",
             Item::instr_b(OpcodeB::BMI, Register::R0, "label".into())
         );
+    }
+
+    #[test]
+    fn instruction_j() {
+        test_item!("JMP label", Item::instr_j(OpcodeJ::JMP, "label".into()));
+        test_item!("JAL label", Item::instr_j(OpcodeJ::JAL, "label".into()));
     }
 
     #[test]
