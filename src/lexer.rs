@@ -102,13 +102,32 @@ impl<'input> Lexer<'input> {
 
                 _ => {
                     let token = match self.read_str().as_str() {
-                        "LD" => Token::LD,
-                        "LDI" => Token::LDI,
-                        "ST" => Token::ST,
+                        "NOP" => Token::NOP,
+                        "MV" => Token::MV,
+                        "AND" => Token::AND,
+                        "OR" => Token::OR,
+                        "SL" => Token::SL,
+                        "SR" => Token::SR,
                         "ADD" => Token::ADD,
+                        "SUB" => Token::SUB,
+                        "ST" => Token::ST,
+                        "LD" => Token::LD,
+
+                        "LDI" => Token::LDI,
+                        "LDIU" => Token::LDIU,
                         "ADDI" => Token::ADDI,
-                        "JMP" => Token::JMP,
+                        "ADDIU" => Token::ADDIU,
+                        "LDHI" => Token::LDHI,
+
                         "BEZ" => Token::BEZ,
+                        "BNZ" => Token::BNZ,
+                        "BPL" => Token::BPL,
+                        "BMI" => Token::BMI,
+
+                        "JMP" => Token::JMP,
+                        "JAL" => Token::JAL,
+                        "JR" => Token::JR,
+                        "JALR" => Token::JALR,
 
                         "r0" => Token::R0,
                         "r1" => Token::R1,
@@ -212,13 +231,38 @@ mod tests {
 
     #[test]
     fn keyword_instruction() {
-        test_lexer!("LD", vec![Token::LD]);
-        test_lexer!("LDI", vec![Token::LDI]);
-        test_lexer!("ST", vec![Token::ST]);
+        // R instruction
+        test_lexer!("NOP", vec![Token::NOP]);
+        test_lexer!("MV", vec![Token::MV]);
+        test_lexer!("AND", vec![Token::AND]);
+        test_lexer!("OR", vec![Token::OR]);
+        test_lexer!("SL", vec![Token::SL]);
+        test_lexer!("SR", vec![Token::SR]);
         test_lexer!("ADD", vec![Token::ADD]);
+        test_lexer!("SUB", vec![Token::SUB]);
+        test_lexer!("ST", vec![Token::ST]);
+        test_lexer!("LD", vec![Token::LD]);
+
+        // I instruction
+        test_lexer!("LDI", vec![Token::LDI]);
+        test_lexer!("LDIU", vec![Token::LDIU]);
         test_lexer!("ADDI", vec![Token::ADDI]);
-        test_lexer!("JMP", vec![Token::JMP]);
+        test_lexer!("ADDIU", vec![Token::ADDIU]);
+        test_lexer!("LDHI", vec![Token::LDHI]);
+
+        // B instruction
         test_lexer!("BEZ", vec![Token::BEZ]);
+        test_lexer!("BNZ", vec![Token::BNZ]);
+        test_lexer!("BPL", vec![Token::BPL]);
+        test_lexer!("BMI", vec![Token::BMI]);
+
+        // J instruction
+        test_lexer!("JMP", vec![Token::JMP]);
+        test_lexer!("JAL", vec![Token::JAL]);
+
+        // JR instruction
+        test_lexer!("JR", vec![Token::JR]);
+        test_lexer!("JALR", vec![Token::JALR]);
     }
 
     #[test]
@@ -235,27 +279,18 @@ mod tests {
 
     #[test]
     fn instruction() {
-        test_lexer!(
-            "LD r0, (r1)",
-            vec![
-                Token::LD,
-                Token::R0,
-                Token::Comma,
-                Token::OpenParen,
-                Token::R1,
-                Token::CloseParen
-            ]
-        );
+        test_lexer!("NOP", vec![Token::NOP]);
 
         test_lexer!(
-            "LDI r0, #1",
-            vec![
-                Token::LDI,
-                Token::R0,
-                Token::Comma,
-                Token::Sharp,
-                token_num!(1),
-            ]
+            "MV r0, r1",
+            vec![Token::MV, Token::R0, Token::Comma, Token::R1]
+        );
+
+        test_lexer!("SL r0", vec![Token::SL, Token::R0]);
+
+        test_lexer!(
+            "ADD r0, r1",
+            vec![Token::ADD, Token::R0, Token::Comma, Token::R1]
         );
 
         test_lexer!(
@@ -266,24 +301,79 @@ mod tests {
                 Token::Comma,
                 Token::OpenParen,
                 Token::R0,
-                Token::CloseParen,
+                Token::CloseParen
             ]
         );
 
         test_lexer!(
-            "ADD r1, r2",
-            vec![Token::ADD, Token::R1, Token::Comma, Token::R2,]
-        );
-
-        test_lexer!(
-            "ADDI r0, #1",
+            "LDI r0, #-10",
             vec![
-                Token::ADDI,
+                Token::LDI,
                 Token::R0,
                 Token::Comma,
                 Token::Sharp,
-                token_num!(1),
+                Token::Minus,
+                token_num!(10)
             ]
         );
+
+        test_lexer!(
+            "LDI r0, #-1",
+            vec![
+                Token::LDI,
+                Token::R0,
+                Token::Comma,
+                Token::Sharp,
+                Token::Minus,
+                token_num!(1)
+            ]
+        );
+        test_lexer!(
+            "LDI r0, #0",
+            vec![
+                Token::LDI,
+                Token::R0,
+                Token::Comma,
+                Token::Sharp,
+                token_num!(0)
+            ]
+        );
+        test_lexer!(
+            "LDI r0, #1",
+            vec![
+                Token::LDI,
+                Token::R0,
+                Token::Comma,
+                Token::Sharp,
+                token_num!(1)
+            ]
+        );
+        test_lexer!(
+            "LDI r0, #10",
+            vec![
+                Token::LDI,
+                Token::R0,
+                Token::Comma,
+                Token::Sharp,
+                token_num!(10)
+            ]
+        );
+
+        test_lexer!(
+            "BEZ r0, label",
+            vec![
+                Token::BEZ,
+                Token::R0,
+                Token::Comma,
+                Token::Ident("label".to_string())
+            ]
+        );
+
+        test_lexer!(
+            "JMP label",
+            vec![Token::JMP, Token::Ident("label".to_string())]
+        );
+
+        test_lexer!("JR r0", vec![Token::JR, Token::R0]);
     }
 }
