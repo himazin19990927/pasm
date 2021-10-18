@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn instruction_jr() {
-        test_item!("JR r0", Item::instr_jr(OpcodeJR::JR, Register::R0));
+        test_item!("JR r0", Item::instr_jr(FunctJR::JR, Register::R0));
     }
 
     #[test]

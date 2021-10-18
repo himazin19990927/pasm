@@ -70,7 +70,7 @@ pub fn encode(line: Mnemonic, table: &HashMap<String, i16>, current_addr: i16) -
             (c << 11) | addr as u16 & 0b00000_11111111111
         }
         Mnemonic::JR(instr) => {
-            let f = instr.opcode.id();
+            let f = instr.funct.id();
             let d = instr.dst.id();
             (d << 8) | f
         }
@@ -236,7 +236,7 @@ pub mod tests {
         let table = &HashMap::new();
 
         // JR r0
-        let jr = Mnemonic::instr_jr(OpcodeJR::JR, Register::R0);
+        let jr = Mnemonic::instr_jr(FunctJR::JR, Register::R0);
         let jr_code = Code::new(0b00000_000_000_01010, jr.clone());
         assert_eq!(jr_code, encode(jr, table, 0));
     }
