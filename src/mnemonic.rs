@@ -140,14 +140,14 @@ impl FunctR {
 impl Display for FunctR {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            FunctR::NOP => todo!(),
-            FunctR::MV => todo!(),
-            FunctR::AND => todo!(),
-            FunctR::OR => todo!(),
-            FunctR::SL => todo!(),
-            FunctR::SR => todo!(),
+            FunctR::NOP => write!(f, "NOP"),
+            FunctR::MV => write!(f, "MV"),
+            FunctR::AND => write!(f, "AND"),
+            FunctR::OR => write!(f, "OR"),
+            FunctR::SL => write!(f, "SL"),
+            FunctR::SR => write!(f, "SR"),
             FunctR::ADD => write!(f, "ADD"),
-            FunctR::SUB => todo!(),
+            FunctR::SUB => write!(f, "SUB"),
             FunctR::ST => write!(f, "ST"),
             FunctR::LD => write!(f, "LD"),
         }
@@ -192,10 +192,10 @@ impl Display for OpcodeI {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeI::LDI => write!(f, "LDI"),
-            OpcodeI::LDIU => todo!(),
+            OpcodeI::LDIU => write!(f, "LDIU"),
             OpcodeI::ADDI => write!(f, "ADDI"),
-            OpcodeI::ADDIU => todo!(),
-            OpcodeI::LDHI => todo!(),
+            OpcodeI::ADDIU => write!(f, "ADDIU"),
+            OpcodeI::LDHI => write!(f, "LDHI"),
         }
     }
 }
@@ -236,9 +236,9 @@ impl Display for OpcodeB {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeB::BEZ => write!(f, "BEZ"),
-            OpcodeB::BNZ => todo!(),
-            OpcodeB::BPL => todo!(),
-            OpcodeB::BMI => todo!(),
+            OpcodeB::BNZ => write!(f, "BNZ"),
+            OpcodeB::BPL => write!(f, "BPL"),
+            OpcodeB::BMI => write!(f, "BMI"),
         }
     }
 }
@@ -274,7 +274,7 @@ impl Display for OpcodeJ {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             OpcodeJ::JMP => write!(f, "JMP"),
-            &OpcodeJ::JAL => todo!(),
+            OpcodeJ::JAL => write!(f, "JAL"),
         }
     }
 }
@@ -310,7 +310,7 @@ impl Display for FunctJR {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             FunctJR::JR => write!(f, "JR"),
-            FunctJR::JALR => todo!(),
+            FunctJR::JALR => write!(f, "JALR"),
         }
     }
 }
