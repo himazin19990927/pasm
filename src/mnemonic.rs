@@ -225,9 +225,9 @@ impl OpcodeB {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeB::BEZ => 0b10000,
-            OpcodeB::BNZ => todo!(),
-            OpcodeB::BPL => todo!(),
-            OpcodeB::BMI => todo!(),
+            OpcodeB::BNZ => 0b10001,
+            OpcodeB::BPL => 0b10010,
+            OpcodeB::BMI => 0b10011,
         }
     }
 }

@@ -329,6 +329,82 @@ pub mod tests {
     }
 
     #[test]
+    fn encode_b_addr() {
+        let items = vec![
+            Item::label("l0".into()),                               //      :l0
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 0    NOP
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "l0".into()), // 1    BEZ r0, l0  (1 -> 0 => -1)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 2    NOP
+            Item::label("l1".into()),                               //      :l1
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "l1".into()), // 3    BEZ r0, l1 // (3 -> 3 => 0)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 4    NOP
+            Item::instr_b(OpcodeB::BEZ, Register::R0, "l2".into()), // 5    BEZ r0, l2 // (5 -> 6 => 1)
+            Item::label("l2".into()),                               //      :l2
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 6    NOP
+        ];
+
+        let (_, table) = convert(items);
+
+        {
+            // 1    BEZ r0, l0  (1 -> 0 => -1)
+            let m = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "l0".into());
+            let c = Code::new(0b10000_000_11111111, m.clone());
+            assert_eq!(c, encode(m, &table, 1));
+        }
+
+        {
+            // 3    BEZ r0, l1 // (3 -> 3 => 0)
+            let m = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "l1".into());
+            let c = Code::new(0b10000_000_00000000, m.clone());
+            assert_eq!(c, encode(m, &table, 3));
+        }
+
+        {
+            // 5    BEZ r0, l2 // (5 -> 6 => 1)
+            let m = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "l2".into());
+            let c = Code::new(0b10000_000_00000001, m.clone());
+            assert_eq!(c, encode(m, &table, 5));
+        }
+    }
+
+    #[test]
+    fn encode_b_instr() {
+        let table = &{
+            let mut t = HashMap::new();
+            t.insert("label".into(), 0);
+            t
+        };
+
+        {
+            // BEZ r0, label
+            let m = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "label".into());
+            let c = Code::new(0b10000_000_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // BNZ r0, label
+            let m = Mnemonic::instr_b(OpcodeB::BNZ, Register::R0, "label".into());
+            let c = Code::new(0b10001_000_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // BPL r0, label
+            let m = Mnemonic::instr_b(OpcodeB::BPL, Register::R0, "label".into());
+            let c = Code::new(0b10010_000_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // BMI r0, label
+            let m = Mnemonic::instr_b(OpcodeB::BMI, Register::R0, "label".into());
+            let c = Code::new(0b10011_000_00000000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+    }
+
+    #[test]
     fn encode_j_jmp() {
         let items = vec![
             Item::label("l0".into()),                               //      :l0
@@ -404,43 +480,6 @@ pub mod tests {
             let c = Code::new(0b10101_00000000001, m.clone());
             assert_eq!(c, encode(m, &table, 5));
         }
-    }
-
-    #[test]
-    fn encode_b() {
-        let items = vec![
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 0
-            Item::instr_b(OpcodeB::BEZ, Register::R0, "label".into()), // 1
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 2
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 3
-            Item::label("label".into()),                            // :label
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 4
-            Item::label("loop".into()),                             // :loop
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 5
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 6
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 7
-            Item::instr_b(OpcodeB::BEZ, Register::R0, "loop".into()), // 8
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 9
-            Item::label("end".into()),                              // :end
-            Item::instr_b(OpcodeB::BEZ, Register::R0, "ebd".into()), // 10
-        ];
-
-        let (_, table) = convert(items);
-
-        // JMP label (1 -> 4 => +3)
-        let bez_label = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "label".into());
-        let bez_label_code = Code::new(0b10000_000_00000011, bez_label.clone());
-        assert_eq!(bez_label_code, encode(bez_label, &table, 1));
-
-        // JMP loop (8 -> 5 => -3)
-        let bez_loop = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "loop".into());
-        let bez_loop_code = Code::new(0b10000_000_11111101, bez_loop.clone());
-        assert_eq!(bez_loop_code, encode(bez_loop, &table, 8));
-
-        // JMP end (10 -> 10 => 0)
-        let bez_end = Mnemonic::instr_b(OpcodeB::BEZ, Register::R0, "end".into());
-        let bez_end_code = Code::new(0b10000_000_00000000, bez_end.clone());
-        assert_eq!(bez_end_code, encode(bez_end, &table, 10));
     }
 
     #[test]
