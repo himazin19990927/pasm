@@ -329,40 +329,81 @@ pub mod tests {
     }
 
     #[test]
-    fn encode_j() {
+    fn encode_j_jmp() {
         let items = vec![
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 0
-            Item::instr_j(OpcodeJ::JMP, "label".into()),            // 1
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 2
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 3
-            Item::label("label".into()),                            // :label
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 4
-            Item::label("loop".into()),                             // :loop
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 5
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 6
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 7
-            Item::instr_j(OpcodeJ::JMP, "loop".into()),             // 8
-            Item::instr_r(FunctR::ADD, Register::R0, Register::R1), // 9
-            Item::label("end".into()),                              // :end
-            Item::instr_j(OpcodeJ::JMP, "end".into()),              // 10
+            Item::label("l0".into()),                               //      :l0
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 0    NOP
+            Item::instr_j(OpcodeJ::JMP, "l0".into()),               // 1    JMP l0  (1 -> 0 => -1)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 2    NOP
+            Item::label("l1".into()),                               //      :l1
+            Item::instr_j(OpcodeJ::JMP, "l1".into()),               // 3    JMP l1 // (3 -> 3 => 0)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 4    NOP
+            Item::instr_j(OpcodeJ::JMP, "l2".into()),               // 5    JMP l2 // (5 -> 6 => 1)
+            Item::label("l2".into()),                               //      :l2
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 6    NOP
         ];
 
         let (_, table) = convert(items);
 
-        // JMP label (1 -> 4 => +3)
-        let jmp_label = Mnemonic::instr_j(OpcodeJ::JMP, "label".into());
-        let jmp_label_code = Code::new(0b10100_00000000011, jmp_label.clone());
-        assert_eq!(jmp_label_code, encode(jmp_label, &table, 1));
+        {
+            // 1    JMP l0 // (1 -> 0 => -1)
+            let m = Mnemonic::instr_j(OpcodeJ::JMP, "l0".into());
+            let c = Code::new(0b10100_11111111111, m.clone());
+            assert_eq!(c, encode(m, &table, 1));
+        }
 
-        // JMP loop (8 -> 5 => -3)
-        let jmp_loop = Mnemonic::instr_j(OpcodeJ::JMP, "loop".into());
-        let jmp_loop_code = Code::new(0b10100_11111111101, jmp_loop.clone());
-        assert_eq!(jmp_loop_code, encode(jmp_loop, &table, 8));
+        {
+            // 3    JMP l1 // (3 -> 3 => 0)
+            let m = Mnemonic::instr_j(OpcodeJ::JMP, "l1".into());
+            let c = Code::new(0b10100_00000000000, m.clone());
+            assert_eq!(c, encode(m, &table, 3));
+        }
 
-        // JMP end (10 -> 10 => 0)
-        let jmp_end = Mnemonic::instr_j(OpcodeJ::JMP, "end".into());
-        let jmp_end_code = Code::new(0b10100_00000000000, jmp_end.clone());
-        assert_eq!(jmp_end_code, encode(jmp_end, &table, 10));
+        {
+            // 5    JMP l2 // (5 -> 6 => 1)
+            let m = Mnemonic::instr_j(OpcodeJ::JMP, "l2".into());
+            let c = Code::new(0b10100_00000000001, m.clone());
+            assert_eq!(c, encode(m, &table, 5));
+        }
+    }
+
+    #[test]
+    fn encode_j_jal() {
+        let items = vec![
+            Item::label("l0".into()),                               //      :l0
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 0    NOP
+            Item::instr_j(OpcodeJ::JAL, "l0".into()),               // 1    JAL l0  (1 -> 0 => -1)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 2    NOP
+            Item::label("l1".into()),                               //      :l1
+            Item::instr_j(OpcodeJ::JAL, "l1".into()),               // 3    JAL l1 // (3 -> 3 => 0)
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 4    NOP
+            Item::instr_j(OpcodeJ::JAL, "l2".into()),               // 5    JAL l2 // (5 -> 6 => 1)
+            Item::label("l2".into()),                               //      :l2
+            Item::instr_r(FunctR::NOP, Register::R0, Register::R0), // 6    NOP
+        ];
+
+        let (_, table) = convert(items);
+
+        {
+            // 1    JAL l0 // (1 -> 0 => -1)
+            let m = Mnemonic::instr_j(OpcodeJ::JAL, "l0".into());
+            let c = Code::new(0b10101_11111111111, m.clone());
+            assert_eq!(c, encode(m, &table, 1));
+        }
+
+        {
+            // 3    JMP l1 // (3 -> 3 => 0)
+            let m = Mnemonic::instr_j(OpcodeJ::JAL, "l1".into());
+            let c = Code::new(0b10101_00000000000, m.clone());
+            assert_eq!(c, encode(m, &table, 3));
+        }
+
+        {
+            // 5    JAL l2 // (5 -> 6 => 1)
+            let m = Mnemonic::instr_j(OpcodeJ::JAL, "l2".into());
+            let c = Code::new(0b10101_00000000001, m.clone());
+            assert_eq!(c, encode(m, &table, 5));
+        }
     }
 
     #[test]

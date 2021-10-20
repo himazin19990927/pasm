@@ -265,7 +265,7 @@ impl OpcodeJ {
     pub fn id(&self) -> u16 {
         match &self {
             OpcodeJ::JMP => 0b10100,
-            OpcodeJ::JAL => todo!(),
+            OpcodeJ::JAL => 0b10101,
         }
     }
 }
