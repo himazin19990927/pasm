@@ -301,7 +301,7 @@ impl FunctJR {
     pub fn id(&self) -> u16 {
         match &self {
             FunctJR::JR => 0b01010,
-            FunctJR::JALR => todo!(),
+            FunctJR::JALR => 0b11000,
         }
     }
 }

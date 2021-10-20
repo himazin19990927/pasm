@@ -446,10 +446,78 @@ pub mod tests {
     #[test]
     fn encode_jr() {
         let table = &HashMap::new();
+        {
+            // JR r0
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R0);
+            let c = Code::new(0b00000_000_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
 
-        // JR r0
-        let jr = Mnemonic::instr_jr(FunctJR::JR, Register::R0);
-        let jr_code = Code::new(0b00000_000_000_01010, jr.clone());
-        assert_eq!(jr_code, encode(jr, table, 0));
+        {
+            // JALR r0
+            let m = Mnemonic::instr_jr(FunctJR::JALR, Register::R0);
+            let c = Code::new(0b00000_000_000_11000, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+    }
+
+    #[test]
+    fn encode_jr_register() {
+        let table = &HashMap::new();
+        {
+            // JR r0
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R0);
+            let c = Code::new(0b00000_000_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r1
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R1);
+            let c = Code::new(0b00000_001_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r2
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R2);
+            let c = Code::new(0b00000_010_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r3
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R3);
+            let c = Code::new(0b00000_011_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r4
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R4);
+            let c = Code::new(0b00000_100_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r5
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R5);
+            let c = Code::new(0b00000_101_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r6
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R6);
+            let c = Code::new(0b00000_110_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
+
+        {
+            // JR r7
+            let m = Mnemonic::instr_jr(FunctJR::JR, Register::R7);
+            let c = Code::new(0b00000_111_000_01010, m.clone());
+            assert_eq!(c, encode(m, table, 0));
+        }
     }
 }
