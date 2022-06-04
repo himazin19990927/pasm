@@ -24,7 +24,6 @@ fn main() -> std::io::Result<()> {
         Some(output) => output,
         None => "a.dat".to_string(),
     };
-    println!("input: {}, output: {}", &input_path, &output_path);
 
     let input_file = fs::read_to_string(input_path)?;
 
